@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container": "#171a1d",
+              "surface-container-low": "#111417",
+              "on-primary-fixed": "#002a35",
+              "on-error-container": "#ffa8a3",
+              "on-secondary": "#290067",
+              "inverse-on-surface": "#535559",
+              "secondary-fixed": "#dac9ff",
+              "on-error": "#490006",
+              "secondary-fixed-dim": "#ceb9ff",
+              "on-surface-variant": "#aaabaf",
+              "on-primary-fixed-variant": "#004a5c",
+              "primary-container": "#00cffc",
+              "surface-tint": "#69daff",
+              "on-primary-container": "#004050",
+              "inverse-surface": "#f9f9fd",
+              "on-secondary-container": "#f8f1ff",
+              "error-container": "#9f0519",
+              "surface-variant": "#23262a",
+              "error": "#ff716c",
+              "error-dim": "#d7383b",
+              "outline": "#747579",
+              "on-secondary-fixed-variant": "#6300e2",
+              "primary-dim": "#00c0ea",
+              "surface-container-high": "#1d2024",
+              "primary-fixed": "#00cffc",
+              "on-tertiary-container": "#000000",
+              "secondary": "#ac89ff",
+              "tertiary-container": "#ff005c",
+              "tertiary": "#ff6e85",
+              "surface-container-lowest": "#000000",
+              "on-tertiary-fixed-variant": "#780027",
+              "background": "#0c0e11",
+              "secondary-dim": "#874cff",
+              "on-surface": "#f9f9fd",
+              "surface-container-highest": "#23262a",
+              "primary-fixed-dim": "#00c0ea",
+              "outline-variant": "#46484b",
+              "on-primary": "#004a5d",
+              "tertiary-dim": "#e70053",
+              "on-background": "#f9f9fd",
+              "surface-bright": "#292c31",
+              "surface-dim": "#0c0e11",
+              "on-secondary-fixed": "#41009a",
+              "tertiary-fixed-dim": "#ff788d",
+              "on-tertiary-fixed": "#39000e",
+              "primary": "#69daff",
+              "on-tertiary": "#480014",
+              "secondary-container": "#7000ff",
+              "tertiary-fixed": "#ff909e",
+              "surface": "#0c0e11",
+              "inverse-primary": "#006880"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(35, 38, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(105, 218, 255, 0.1);
+            border-left: 1px solid rgba(105, 218, 255, 0.1);
+        }
+        .text-glow {
+            text-shadow: 0 0 12px rgba(105, 218, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<!-- TopNavBar (Standardized to SCREEN_174 style) -->
+<header class="bg-[#0c0e11] flex justify-between items-center w-full px-6 py-4 h-20 top-0 z-50 border-b border-[#23262a]/30 shadow-[0_24px_48px_rgba(0,0,0,0.4)] fixed">
+<!-- Logo - Left 1/4 -->
+<div class="flex items-center w-1/4">
+<div class="flex items-center gap-3 group cursor-pointer">
+<img alt="Onboard Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uj9tE9aJKEn5prVJMPWSgFkk86I0ROmzEbe9DLWImJa6WmhhTwNiexAOFgaa0qw-nqqXLN0nkYatbrxIlr8Hf_AJ1jP8ty6nkmmKZrbCfcODygZXShyfyNyjEDsqJU1pq484mK5EQn-VH3pukRhsNvEcCsGqvFkeqdzqnqLszir-RaIJGyhQZ8vPB0tMBvjV-9LK9D4wbNOLYsxk5_IUMQkrTobNro4pD_NzWb03P6qX3AcH5Ari1ilEPkn"/>
+<span class="text-4xl font-bold tracking-tight text-[#69daff] font-headline">Onboard</span>
+</div>
+</div>
+<!-- Centered Menu - Flex-1 Center -->
+<nav class="flex-1 flex justify-center items-center gap-12 font-headline font-medium tracking-[0.1em] text-[13px] uppercase">
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Market</a>
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Watchlist</a>
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Deck Builder</a>
+<div class="relative flex flex-col items-center">
+<a class="text-[#69daff] font-bold whitespace-nowrap" href="#">Collection</a>
+<div class="absolute -bottom-2 w-full h-1 bg-[#69daff] rounded-full"></div>
+</div>
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Seller Hub</a>
+</nav>
+<!-- User Profile & Actions - Right 1/4 -->
+<div class="flex items-center justify-end gap-4 w-1/4">
+<div class="relative hidden lg:block mr-4">
+<input class="bg-surface-container-lowest/50 border border-outline-variant/10 text-on-surface focus:ring-1 focus:ring-primary/30 w-48 rounded-full px-5 py-1.5 text-xs font-body" placeholder="Search the vault..." type="text"/>
+<div class="absolute right-3 top-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-xs">search</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-[#171a1d] transition-all duration-200 rounded-full relative">
+<span class="material-symbols-outlined text-[#69daff]">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full border-2 border-[#0c0e11]"></span>
+</button>
+<div class="w-9 h-9 rounded-full bg-surface-container-highest overflow-hidden ml-2 border border-outline-variant/30">
+<img alt="User" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1oC1axstDPvxy7g1rpa1_R6WaPvmsh6MRPV0VwxQRnTw8Gu3CAPYaQa5-Abo2LOBz6PMcEITb2LwEQSjnTuAAltject8-5saG4CHFctYnNjlfOh3UjZHrafjYddc6TToIgQoMILhFGG9zd3QNBuOR4BZVPGts3XLzOlWLVtH7fCo7ljv7hH8KFncJ3E519BRvYCOyUv6zZEGUBDclxtioynXYzA48ymxdytXG1DU2Vo0e0y7APgrH1gCQ6Zj__67IsWDQn0XRCEnB"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Left Sidebar (Kept as is for "Standardized collection sidebar") -->
+<aside class="fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-slate-950 border-r border-white/5 z-40 hidden xl:flex flex-col">
+<div class="p-6 h-full flex flex-col">
+<div class="mb-8">
+<h3 class="font-label uppercase text-[10px] tracking-[0.2em] text-slate-500 mb-6">Market Filter</h3>
+<div class="space-y-1">
+<button class="w-full text-left px-4 py-3 rounded-xl bg-primary/10 text-primary border border-primary/20 text-xs font-label uppercase tracking-widest">All Games</button>
+<button class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 transition-colors text-xs font-label uppercase tracking-widest">Pokémon</button>
+<button class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 transition-colors text-xs font-label uppercase tracking-widest">Magic</button>
+<button class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 transition-colors text-xs font-label uppercase tracking-widest">Yu-Gi-Oh!</button>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5">
+<button class="w-full py-3 bg-primary text-on-primary font-headline font-bold rounded-xl text-sm hover:scale-[0.98] transition-transform duration-150">
+                Upgrade to Pro
+            </button>
+</div>
+</div>
+</aside>
+<main class="pt-32 pb-12 px-8 max-w-screen-2xl mx-auto xl:ml-64 transition-all duration-300">
+<!-- Dashboard Header / Total Portfolio -->
+<section class="mb-14 grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 glass-panel rounded-xl p-8 flex flex-col justify-between overflow-hidden relative">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[80px]"></div>
+<div>
+<span class="font-label uppercase text-[10px] tracking-[0.2em] text-primary mb-2 block">Total Portfolio Valuation</span>
+<h1 class="font-headline text-5xl font-bold tracking-tight text-glow mb-4">$142,850.42</h1>
+<div class="flex items-center gap-3">
+<span class="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                        +12.4%
+                    </span>
+<span class="text-slate-500 text-xs font-medium">vs. last month</span>
+</div>
+</div>
+<div class="mt-12 grid grid-cols-3 gap-4">
+<div class="bg-surface-container-lowest/40 p-4 rounded-lg">
+<span class="font-label text-[9px] text-slate-500 uppercase block mb-1">Liquid Assets</span>
+<span class="font-headline text-lg font-bold">$12,400</span>
+</div>
+<div class="bg-surface-container-lowest/40 p-4 rounded-lg">
+<span class="font-label text-[9px] text-slate-500 uppercase block mb-1">Vaulted Items</span>
+<span class="font-headline text-lg font-bold">$130,450</span>
+</div>
+<div class="bg-surface-container-lowest/40 p-4 rounded-lg">
+<span class="font-label text-[9px] text-slate-500 uppercase block mb-1">Items Tracked</span>
+<span class="font-headline text-lg font-bold">1,422</span>
+</div>
+</div>
+</div>
+<!-- Asset Allocation Chart (Simulated) -->
+<div class="bg-surface-container-low rounded-xl p-8 flex flex-col items-center justify-center border border-outline-variant/10">
+<div class="relative w-48 h-48 mb-6">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<circle class="stroke-surface-container-highest" cx="18" cy="18" fill="none" r="16" stroke-width="4"></circle>
+<circle class="stroke-primary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="60, 100" stroke-linecap="round" stroke-width="4"></circle>
+<circle class="stroke-secondary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="25, 100" stroke-dashoffset="-60" stroke-linecap="round" stroke-width="4"></circle>
+<circle class="stroke-tertiary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="15, 100" stroke-dashoffset="-85" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-[10px] text-slate-500 uppercase font-label">Diversity</span>
+<span class="text-xl font-headline font-bold">High</span>
+</div>
+</div>
+<div class="w-full space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-xs font-medium">TCG Cards</span>
+</div>
+<span class="text-xs font-bold">60%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-xs font-medium">Memorabilia</span>
+</div>
+<span class="text-xs font-bold">25%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-xs font-medium">Digital Collectibles</span>
+</div>
+<span class="text-xs font-bold">15%</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Search & Filter Controls -->
+<div class="flex flex-col md:flex-row gap-6 items-center justify-between mb-10">
+<h2 class="font-headline text-2xl font-bold tracking-tight">Inventory <span class="text-slate-600 font-light ml-2">(1,422)</span></h2>
+<div class="flex items-center gap-4 w-full md:w-auto">
+<div class="relative flex-grow md:w-80">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500">search</span>
+<input class="w-full bg-surface-container-lowest border-none focus:ring-1 focus:ring-primary rounded-full pl-12 pr-4 py-3 text-sm font-body text-on-surface" placeholder="Search your vault..." type="text"/>
+</div>
+<button class="bg-surface-container-highest p-3 rounded-full hover:bg-surface-variant transition-colors group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary">filter_list</span>
+</button>
+<button class="bg-primary text-on-primary-container px-6 py-3 rounded-full font-bold text-sm flex items-center gap-2 hover:brightness-110 transition-all shadow-[0_0_20px_rgba(105,218,255,0.2)]">
+<span class="material-symbols-outlined">add</span>
+                Add Asset
+            </button>
+</div>
+</div>
+<!-- Inventory Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<!-- Card 1 -->
+<div class="group relative bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+<div class="aspect-[3/4] overflow-hidden relative bg-surface-container-lowest">
+<img alt="high-value collectible trading card" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDld42CAoaKiCqXv_vWPm_vffqh6Mt2XNzNzx84nlQCvx3ZZBo5GXou3PNshKJVaymS79i6RDZrOPBpGzATpWfclFXmHp7Tu7gmM-RTCEtqg6HCKSa8jTn0Qb6-flNgaIw_JYY4Vc0tWuxW2oLKe2rPOJIN4DyIOR9n3HaDras9q71z8aR7F_2fCvqenCRMTCBAzHjIZe7IchobyUwrngLRIV_U6mSYlSQnooBbPYi3oaDU5QO0E49KR43R5VHI7hjUzxN_kGajcBJi"/>
+<div class="absolute top-4 left-4">
+<span class="font-label text-[9px] font-bold uppercase tracking-widest bg-secondary-container/80 backdrop-blur-md px-3 py-1 rounded-full text-on-secondary-container">PSA 10 GEM MINT</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline font-bold text-lg leading-tight">Charizard 1st Edition Shadowless</h3>
+<span class="material-symbols-outlined text-slate-600 cursor-pointer hover:text-primary transition-colors">more_vert</span>
+</div>
+<p class="font-label text-[10px] text-slate-500 uppercase mb-4 tracking-tighter">1999 Base Set • Holo Rare</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div>
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Market Value</span>
+<span class="font-headline font-bold text-primary">$42,500.00</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Growth</span>
+<span class="font-headline font-bold text-primary-container text-xs flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-xs">arrow_upward</span>
+                            8.2%
+                        </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+<div class="aspect-[3/4] overflow-hidden relative bg-surface-container-lowest">
+<img alt="premium fantasy card art" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFKzzKwaEGBcvJDQDc2ubjk3xQDT82mm8LIj3ZwPeu4j_xR-L5cOqnZVzQFKaLM1_tbapIm1oxKJPA0mShHZPSx5Jqc1wr2kjWPIsnDsshb0JeygVn-y8jqzpzscIuO9KKhBCzwDSVYFOjKZyOqNWgwGEl8sJWL3K9Mw1cP62prNd7BARow8Y85mDsSCpVUKwUZbm8EX-WPmbZvfgudYOOik5n2wzhxPkJpZcPRROlXDFWVdLGk0-JOGYmNlC53pkyJpJPHr_tTPzL"/>
+<div class="absolute top-4 left-4">
+<span class="font-label text-[9px] font-bold uppercase tracking-widest bg-surface-container-highest/80 backdrop-blur-md px-3 py-1 rounded-full text-on-surface">BGS 9.5 MINT+</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline font-bold text-lg leading-tight">Black Lotus (CE)</h3>
+<span class="material-symbols-outlined text-slate-600 cursor-pointer hover:text-primary transition-colors">more_vert</span>
+</div>
+<p class="font-label text-[10px] text-slate-500 uppercase mb-4 tracking-tighter">Collectors' Edition • Artifact</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div>
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Market Value</span>
+<span class="font-headline font-bold text-primary">$18,200.00</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Growth</span>
+<span class="font-headline font-bold text-error text-xs flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-xs">arrow_downward</span>
+                            2.4%
+                        </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+<div class="aspect-[3/4] overflow-hidden relative bg-surface-container-lowest">
+<img alt="vintage comic book style card" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuMElndqNngGoMV1GZpIJv6AtGLZ27IzENukp65r3duIZf2JR-VIORlqzbxlMYaQj4ylorsVpG_jbX5Oev5vsclwuQ2WosyUNc59gKL7bVPqjpGUYiCdvj52g2tyuWTq4ZxZObq1d0aNSeymjoGiIbRO-E_b513QFqYENWsOnD9p0rYD6b5c3oQR-BTvEvwDt4gs3EA4EWSD8gDkQ87Mmg8KHb4virDnc9GqnEBFBC5R1tJH7SBBNXm4x-PKVrZJWe1jCujd-UtN2G"/>
+<div class="absolute top-4 left-4">
+<span class="font-label text-[9px] font-bold uppercase tracking-widest bg-tertiary-container/80 backdrop-blur-md px-3 py-1 rounded-full text-on-tertiary-container">UNGRADED (LP)</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline font-bold text-lg leading-tight">Blue-Eyes White Dragon</h3>
+<span class="material-symbols-outlined text-slate-600 cursor-pointer hover:text-primary transition-colors">more_vert</span>
+</div>
+<p class="font-label text-[10px] text-slate-500 uppercase mb-4 tracking-tighter">LOB-001 • Ultra Rare</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div>
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Market Value</span>
+<span class="font-headline font-bold text-primary">$1,250.00</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Growth</span>
+<span class="font-headline font-bold text-primary-container text-xs flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-xs">arrow_upward</span>
+                            14.5%
+                        </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group relative bg-surface-container rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.4)]">
+<div class="aspect-[3/4] overflow-hidden relative bg-surface-container-lowest">
+<img alt="modern sports card" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-90 group-hover:opacity-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCAPJc0eo-6j4SqPI1GAQ_kjedOs-Wgvnje7IiJYjJqmaqNyBT04x_tA-hsPQsQiP9XKBViPL_SSasDJY0JSL7u40mDqynje7ObGi7VidG2dwZl2edhPLFXAnkcJPDPagM8dANOa8rpHAuL1bOACJt-KDIaAtS0kp25eA3Yejced9hCbo8pb9FGugDj_PN-VXegx-82lZcZvuHkZl4vjgsQNw2zxFHqrauHvIT43MZWhEBvMTPPwKcvw4TOTYv9bdIzHFHxUgq3K5F"/>
+<div class="absolute top-4 left-4">
+<span class="font-label text-[9px] font-bold uppercase tracking-widest bg-primary/20 backdrop-blur-md px-3 py-1 rounded-full text-primary">SGC 10 PRISTINE</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline font-bold text-lg leading-tight">Luka Doncic Prizm Rookie</h3>
+<span class="material-symbols-outlined text-slate-600 cursor-pointer hover:text-primary transition-colors">more_vert</span>
+</div>
+<p class="font-label text-[10px] text-slate-500 uppercase mb-4 tracking-tighter">2018 Panini Prizm • Silver</p>
+<div class="flex items-center justify-between pt-4 border-t border-outline-variant/10">
+<div>
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Market Value</span>
+<span class="font-headline font-bold text-primary">$4,800.00</span>
+</div>
+<div class="text-right">
+<span class="font-label text-[9px] text-slate-500 block uppercase mb-1">Growth</span>
+<span class="font-headline font-bold text-primary-container text-xs flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-xs">arrow_upward</span>
+                            3.1%
+                        </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-16 flex flex-col items-center gap-4">
+<button class="bg-surface-container-high border border-outline-variant/20 px-8 py-3 rounded-full font-bold text-sm hover:bg-surface-variant transition-all">
+            Load More Assets
+        </button>
+<p class="text-[10px] font-label uppercase tracking-widest text-slate-600">Showing 4 of 1,422 items</p>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Manrope:wght@200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container": "#171a1d",
+              "surface-container-low": "#111417",
+              "on-primary-fixed": "#002a35",
+              "on-error-container": "#ffa8a3",
+              "on-secondary": "#290067",
+              "inverse-on-surface": "#535559",
+              "secondary-fixed": "#dac9ff",
+              "on-error": "#490006",
+              "secondary-fixed-dim": "#ceb9ff",
+              "on-surface-variant": "#aaabaf",
+              "on-primary-fixed-variant": "#004a5c",
+              "primary-container": "#00cffc",
+              "surface-tint": "#69daff",
+              "on-primary-container": "#004050",
+              "inverse-surface": "#f9f9fd",
+              "on-secondary-container": "#f8f1ff",
+              "error-container": "#9f0519",
+              "surface-variant": "#23262a",
+              "error": "#ff716c",
+              "error-dim": "#d7383b",
+              "outline": "#747579",
+              "on-secondary-fixed-variant": "#6300e2",
+              "primary-dim": "#00c0ea",
+              "surface-container-high": "#1d2024",
+              "primary-fixed": "#00cffc",
+              "on-tertiary-container": "#000000",
+              "secondary": "#ac89ff",
+              "tertiary-container": "#ff005c",
+              "tertiary": "#ff6e85",
+              "surface-container-lowest": "#000000",
+              "on-tertiary-fixed-variant": "#780027",
+              "background": "#0c0e11",
+              "secondary-dim": "#874cff",
+              "on-surface": "#f9f9fd",
+              "surface-container-highest": "#23262a",
+              "primary-fixed-dim": "#00c0ea",
+              "outline-variant": "#46484b",
+              "on-primary": "#004a5d",
+              "tertiary-dim": "#e70053",
+              "on-background": "#f9f9fd",
+              "surface-bright": "#292c31",
+              "surface-dim": "#0c0e11",
+              "on-secondary-fixed": "#41009a",
+              "tertiary-fixed-dim": "#ff788d",
+              "on-tertiary-fixed": "#39000e",
+              "primary": "#69daff",
+              "on-tertiary": "#480014",
+              "secondary-container": "#7000ff",
+              "tertiary-fixed": "#ff909e",
+              "surface": "#0c0e11",
+              "inverse-primary": "#006880"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(35, 38, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(105, 218, 255, 0.1);
+            border-left: 1px solid rgba(105, 218, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary-container">
+<!-- Standardized Top Navigation Header (Matched to SCREEN_174 style) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-[#0c0e11] border-b border-[#23262a]/30 h-20 shadow-[0_24px_48px_rgba(0,0,0,0.4)]">
+<div class="max-w-full mx-auto px-6 h-full flex items-center justify-between">
+<!-- Logo Section (Left) -->
+<div class="w-1/4">
+<div class="flex items-center gap-3 group cursor-pointer">
+<img alt="Onboard Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uj9tE9aJKEn5prVJMPWSgFkk86I0ROmzEbe9DLWImJa6WmhhTwNiexAOFgaa0qw-nqqXLN0nkYatbrxIlr8Hf_AJ1jP8ty6nkmmKZrbCfcODygZXShyfyNyjEDsqJU1pq484mK5EQn-VH3pukRhsNvEcCsGqvFkeqdzqnqLszir-RaIJGyhQZ8vPB0tMBvjV-9LK9D4wbNOLYsxk5_IUMQkrTobNro4pD_NzWb03P6qX3AcH5Ari1ilEPkn"/>
+<span class="text-4xl font-bold tracking-tight text-[#69daff] font-headline">Onboard</span>
+</div>
+</div>
+<!-- Centered Navigation (Perfectly centered in the header) -->
+<nav class="flex-1 flex justify-center items-center gap-12 font-headline font-medium tracking-[0.1em] text-[13px] uppercase">
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Market</a>
+<div class="relative flex flex-col items-center">
+<a class="text-[#69daff] font-bold whitespace-nowrap" href="#">Watchlist</a>
+<div class="absolute -bottom-2 w-full h-1 bg-[#69daff] rounded-full"></div>
+</div>
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Deck Builder</a>
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Collection</a>
+<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="#">Seller Hub</a>
+</nav>
+<!-- User Actions (Right) -->
+<div class="flex items-center justify-end gap-4 w-1/4">
+<div class="relative hidden lg:block mr-4">
+<input class="bg-surface-container-lowest/50 border border-outline-variant/10 text-on-surface focus:ring-1 focus:ring-primary/30 w-48 rounded-full px-5 py-1.5 text-xs font-body" placeholder="Search the vault..." type="text"/>
+<div class="absolute right-3 top-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-xs">search</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button class="p-2 hover:bg-[#171a1d] transition-all duration-200 rounded-full relative">
+<span class="material-symbols-outlined text-[#69daff]" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full border-2 border-[#0c0e11]"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-white/10 ml-2">
+<div class="text-right hidden xl:block">
+<p class="font-headline font-bold text-[11px] text-on-surface leading-none">Collector Vault</p>
+<p class="font-label text-[9px] text-primary uppercase">Elite Member</p>
+</div>
+<div class="w-9 h-9 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+<img alt="User" class="w-full h-full object-cover" data-alt="professional male portrait avatar with tech enthusiast aesthetic, soft neon blue backlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXVL64lPCYnI67dvfQL1UbbQV9ScD0IrBjj1l5-QiiCGnsYSIq99PcGZ3n-1LAbW9z2PUIU-flQhs6wjvs5PLO6tSEJnTfv4ylh3j-ZhyTe2Am48fhdA3Hag8lTtLQmgT2s89x5vjqnHd2uE2DDbU1nU0Qm3zZFFZ4aghz65MaVriWKY3tsrfJS4jr-KRb_h8Kv1F-BBFGZ8wX4qDglsa2sXSZMxeZCEeIdOMIetQO4hTcMvQpL_KByGivzNPBrLe3KIkAHkl_w-Le"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Sidebar -->
+<aside class="fixed left-0 top-20 h-[calc(100vh-5rem)] w-64 bg-slate-950 border-r border-white/5 z-40 hidden xl:flex flex-col">
+<div class="p-6">
+<div class="mb-8">
+<h3 class="font-label uppercase text-[10px] tracking-[0.2em] text-slate-500 mb-6">Market Filter</h3>
+<div class="space-y-1">
+<button class="w-full text-left px-4 py-3 rounded-xl bg-primary/10 text-primary border border-primary/20 text-xs font-label uppercase tracking-widest">All Games</button>
+<button class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 transition-colors text-xs font-label uppercase tracking-widest">Pokémon</button>
+<button class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 transition-colors text-xs font-label uppercase tracking-widest">Magic</button>
+<button class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-white/5 transition-colors text-xs font-label uppercase tracking-widest">Yu-Gi-Oh!</button>
+</div>
+</div>
+<div class="mt-auto pt-6 border-t border-white/5">
+<button class="w-full py-3 bg-primary text-on-primary font-headline font-bold rounded-xl text-sm hover:scale-[0.98] transition-transform duration-150">
+                    Upgrade to Pro
+                </button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="xl:ml-64 pt-20 min-h-screen relative pb-20">
+<!-- Sub-header area -->
+<header class="sticky top-20 z-30 bg-background/80 backdrop-blur-xl px-8 py-6 flex justify-between items-center max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Watchlist <span class="text-primary">Hub</span></h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline text-sm" data-icon="search">search</span>
+<input class="bg-surface-container-lowest border border-white/5 focus:border-primary focus:ring-0 text-sm pl-10 pr-4 py-2 rounded-lg w-64 font-body placeholder:text-outline-variant" placeholder="Search tracked assets..." type="text"/>
+</div>
+<div class="flex gap-2 xl:hidden">
+<button class="bg-surface-container-high px-4 py-2 rounded-lg border border-outline-variant/10 text-xs font-label uppercase tracking-widest text-primary">All Games</button>
+</div>
+</div>
+</header>
+<!-- Monitoring Section -->
+<section class="px-8 mt-4 grid grid-cols-12 gap-6 max-w-screen-2xl mx-auto">
+<!-- Hero Metric: Market Pulse -->
+<div class="col-span-12 lg:col-span-8 glass-card rounded-xl p-8 flex flex-col justify-between min-h-[300px] relative overflow-hidden">
+<div class="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+<svg class="w-full h-full" viewbox="0 0 400 200">
+<path d="M0 150 Q 50 120 100 140 T 200 80 T 300 100 T 400 40" fill="none" stroke="#69daff" stroke-width="4"></path>
+<path d="M0 150 Q 50 120 100 140 T 200 80 T 300 100 T 400 40 V 200 H 0 Z" fill="url(#grad)"></path>
+<defs>
+<lineargradient id="grad" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:#69daff;stop-opacity:0.3"></stop>
+<stop offset="100%" style="stop-color:#69daff;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<div class="z-10">
+<h3 class="font-label uppercase text-[10px] tracking-[0.2em] text-primary mb-2">Watchlist Performance</h3>
+<h2 class="font-headline text-4xl font-bold text-on-surface mb-1">+$4,281.50</h2>
+<p class="font-body text-primary-dim flex items-center gap-1 text-sm">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+                        12.4% increase across 24 tracked items this month
+                    </p>
+</div>
+<div class="z-10 mt-8 flex gap-4">
+<div class="bg-surface-container-lowest/40 p-4 rounded-xl border border-outline-variant/10 flex-1">
+<p class="font-label text-[9px] text-on-surface-variant uppercase mb-1">Highest Gain</p>
+<p class="font-headline font-bold text-lg text-secondary">Black Lotus (Alpha)</p>
+<p class="font-body text-xs text-secondary-dim">+8.2% (24h)</p>
+</div>
+<div class="bg-surface-container-lowest/40 p-4 rounded-xl border border-outline-variant/10 flex-1">
+<p class="font-label text-[9px] text-on-surface-variant uppercase mb-1">Alerts Triggered</p>
+<p class="font-headline font-bold text-lg text-tertiary">3 Price Targets</p>
+<p class="font-body text-xs text-tertiary-dim">Review active orders</p>
+</div>
+</div>
+</div>
+<!-- Price Targets & Alerts Panel -->
+<div class="col-span-12 lg:col-span-4 glass-card rounded-xl p-6 border-l-4 border-l-tertiary">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline font-bold text-lg">Active Alerts</h3>
+<button class="text-primary text-xs font-label uppercase tracking-widest hover:underline">View All</button>
+</div>
+<div class="space-y-4">
+<!-- Alert Item -->
+<div class="flex items-center gap-4 bg-surface-container-lowest/30 p-3 rounded-lg border border-outline-variant/5">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined" data-icon="notifications_active" style="font-variation-settings: 'FILL' 1;">notifications_active</span>
+</div>
+<div class="flex-1">
+<p class="font-body text-sm font-bold">Base Set Charizard</p>
+<p class="font-label text-[10px] text-on-surface-variant uppercase">Target hit: $12,500</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant cursor-pointer hover:text-on-surface" data-icon="close">close</span>
+</div>
+<div class="flex items-center gap-4 bg-surface-container-lowest/30 p-3 rounded-lg border border-outline-variant/5">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined" data-icon="trending_down">trending_down</span>
+</div>
+<div class="flex-1">
+<p class="font-body text-sm font-bold">Skyridge Umbreon</p>
+<p class="font-label text-[10px] text-on-surface-variant uppercase">Dip Alert: -5%</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant cursor-pointer hover:text-on-surface" data-icon="close">close</span>
+</div>
+<button class="w-full py-3 border border-dashed border-outline-variant/30 rounded-xl text-on-surface-variant font-label text-[10px] uppercase tracking-widest hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Create New Price Target
+                    </button>
+</div>
+</div>
+<!-- Tracked Assets List -->
+<div class="col-span-12 mt-10">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="font-headline text-2xl font-bold">Monitored Assets</h3>
+<p class="font-body text-on-surface-variant text-sm">Real-time market depth and floor price tracking.</p>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg bg-surface-container-high text-on-surface border border-primary/20">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container text-on-surface-variant border border-transparent">
+<span class="material-symbols-outlined" data-icon="list">list</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<div class="group relative">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+<div class="relative surface-container-high glass-card rounded-xl p-5 overflow-hidden">
+<div class="flex gap-4">
+<div class="w-24 h-32 rounded-lg bg-surface-container-lowest overflow-hidden flex-shrink-0 border border-outline-variant/10">
+<img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="close up of a legendary holographic trading card with swirling blue and purple energy effects" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa5GRIdoGKLgDiG3nPdtL3IQpjVblLwaZgLrwsqwrCCLmvrZ7IAZ1iLbS064umdb0OzBj1SxE-5NPyq8EfgLC4C411_225VofjgR8z7DWYwjiCptt4QuE9_31AzRqV1jwgJlHKMYoySQlIE0VJreydMHXwc0GVwrc4CtTsc1NXe3fID_2PhRJDxnjdL4xY-gkRFGDS6YKMgch5LTHXbbBu9W-t4A_bay4g2YkgBRrQ_u6d7-tFkhESew7kZxNPqBCk4c1Wtm5GOhL7"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<div class="flex justify-between items-start">
+<span class="font-label text-[9px] text-primary uppercase tracking-[0.15em]">Pokemon • Team Rocket</span>
+<span class="material-symbols-outlined text-primary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h4 class="font-headline font-bold text-lg leading-tight mt-1">Dark Blastoise (1st Ed)</h4>
+<p class="font-label text-[10px] text-on-surface-variant mt-1">PSA 10 • HOLO</p>
+</div>
+<div class="mt-4">
+<div class="flex items-end justify-between">
+<div>
+<p class="font-label text-[8px] text-on-surface-variant uppercase">Current Market</p>
+<p class="font-headline font-black text-xl text-on-surface">$2,450.00</p>
+</div>
+<div class="text-right">
+<p class="font-body text-primary text-sm font-bold">+4.5%</p>
+<div class="w-16 h-4">
+<svg class="w-full h-full stroke-primary fill-none stroke-2" viewbox="0 0 100 20">
+<path d="M0 15 Q 10 18 20 12 T 40 10 T 60 14 T 80 5 T 100 8"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative">
+<div class="absolute -inset-1 bg-gradient-to-r from-secondary/20 to-tertiary/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+<div class="relative surface-container-high glass-card rounded-xl p-5 overflow-hidden">
+<div class="flex gap-4">
+<div class="w-24 h-32 rounded-lg bg-surface-container-lowest overflow-hidden flex-shrink-0 border border-outline-variant/10">
+<img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="high quality collectors trading card with mystical purple illustrations and intricate frame details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSbT2XGtBRv6PQWIzyha72ghbC6p0-WJWy0bWRUf4BiRR75Au-OPDMkmEvXhBdAuu4hMkFlv4vkZM7jQajz5cuMklGD_5XoIDFoY_dYH_DlQ_wqI0tgd36aqdRCjE-LXgx_EDTpkWOfjIXx15YaHQZ4XS2VOnb-LDVf6My9AF8xaQLb86LU0vpZHZCpbxC0CmJCSx-SYdIkOuSl4oenGvNci1aEn-hEK_QS-T1hqjR9ukNSuiuvM102lTveaVpdx29TKHzq9zKu3SF"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<div class="flex justify-between items-start">
+<span class="font-label text-[9px] text-secondary uppercase tracking-[0.15em]">MTG • Antiquities</span>
+<span class="material-symbols-outlined text-secondary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h4 class="font-headline font-bold text-lg leading-tight mt-1">Mishra's Workshop</h4>
+<p class="font-label text-[10px] text-on-surface-variant mt-1">BGS 9.5 • MINT</p>
+</div>
+<div class="mt-4">
+<div class="flex items-end justify-between">
+<div>
+<p class="font-label text-[8px] text-on-surface-variant uppercase">Current Market</p>
+<p class="font-headline font-black text-xl text-on-surface">$5,120.00</p>
+</div>
+<div class="text-right">
+<p class="font-body text-error text-sm font-bold">-1.2%</p>
+<div class="w-16 h-4">
+<svg class="w-full h-full stroke-error fill-none stroke-2" viewbox="0 0 100 20">
+<path d="M0 5 Q 20 8 40 18 T 60 12 T 80 15 T 100 18"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative">
+<div class="absolute -inset-1 bg-gradient-to-r from-primary/20 to-tertiary/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition duration-500"></div>
+<div class="relative surface-container-high glass-card rounded-xl p-5 overflow-hidden">
+<div class="flex gap-4">
+<div class="w-24 h-32 rounded-lg bg-surface-container-lowest overflow-hidden flex-shrink-0 border border-outline-variant/10">
+<img class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" data-alt="shimmering silver and gold trading card with a sleek futuristic design and sharp edges" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOR51hWlc-8il2WleW66_EzaPQDVwveSaV5Q6Q_iPKxhKyionmVxJlgjRjrlUyurl3wk1BI0tM9cBIDxDjHfRFerqkrtesTc1sWth2pTf_Z1_S5G2RZn2rB4N_oCqWKqrmx7NS7NmFb1R_2kkk8qZcy7X6m4Iv9cpplQ3_LozEKQn1VTT9-Ah-2MD0gwPvG9RSBD5UMoZ5HY36Tj4Y5KkT9xf6rGbNt0LASuWS2fb86h5ynijPO4YIRkDfh12YthptTJlWrWFnFYtC"/>
+</div>
+<div class="flex flex-col justify-between flex-1 py-1">
+<div>
+<div class="flex justify-between items-start">
+<span class="font-label text-[9px] text-tertiary uppercase tracking-[0.15em]">Pokemon • Base Set</span>
+<span class="material-symbols-outlined text-tertiary text-sm" data-icon="star" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<h4 class="font-headline font-bold text-lg leading-tight mt-1">Charizard (Holo)</h4>
+<p class="font-label text-[10px] text-on-surface-variant mt-1">PSA 9 • SHADOWLESS</p>
+</div>
+<div class="mt-4">
+<div class="flex items-end justify-between">
+<div>
+<p class="font-label text-[8px] text-on-surface-variant uppercase">Current Market</p>
+<p class="font-headline font-black text-xl text-on-surface">$12,450.00</p>
+</div>
+<div class="text-right">
+<p class="font-body text-primary text-sm font-bold">+8.7%</p>
+<div class="w-16 h-4">
+<svg class="w-full h-full stroke-primary fill-none stroke-2" viewbox="0 0 100 20">
+<path d="M0 18 Q 20 15 40 10 T 60 5 T 80 8 T 100 2"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recently Triggered Events -->
+<div class="col-span-12 mt-12 mb-12">
+<div class="bg-surface-container-low rounded-xl p-8 border border-outline-variant/5">
+<h3 class="font-headline font-bold text-xl mb-6">Market Activity Feed</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-6 p-4 bg-surface-container/50 rounded-lg group hover:bg-surface-container transition-colors">
+<div class="font-label text-[10px] text-on-surface-variant w-20">14:22 PM</div>
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_#69daff]"></div>
+<p class="font-body text-sm flex-1"><span class="font-bold">Dark Blastoise</span> floor price rose <span class="text-primary font-bold">+2.4%</span> on TCGPlayer</p>
+<button class="text-xs font-label uppercase text-primary opacity-0 group-hover:opacity-100 transition-opacity">Details</button>
+</div>
+<div class="flex items-center gap-6 p-4 bg-surface-container/50 rounded-lg group hover:bg-surface-container transition-colors">
+<div class="font-label text-[10px] text-on-surface-variant w-20">11:05 AM</div>
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_#ff6e85]"></div>
+<p class="font-body text-sm flex-1"><span class="font-bold">Charizard Base Set</span> 5 new listings identified under <span class="text-tertiary font-bold">$12,000</span></p>
+<button class="text-xs font-label uppercase text-primary opacity-0 group-hover:opacity-100 transition-opacity">Details</button>
+</div>
+<div class="flex items-center gap-6 p-4 bg-surface-container/50 rounded-lg group hover:bg-surface-container transition-colors">
+<div class="font-label text-[10px] text-on-surface-variant w-20">09:40 AM</div>
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#ac89ff]"></div>
+<p class="font-body text-sm flex-1"><span class="font-bold">Mishra's Workshop</span> Buy/Sell spread tightened to <span class="text-secondary font-bold">1.5%</span></p>
+<button class="text-xs font-label uppercase text-primary opacity-0 group-hover:opacity-100 transition-opacity">Details</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Dynamic Action Button -->
+<button class="fixed bottom-10 right-10 w-16 h-16 rounded-full bg-primary text-on-primary-container flex items-center justify-center shadow-[0_12px_24px_rgba(105,218,255,0.4)] hover:scale-110 transition-transform z-50 group">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform duration-300" data-icon="add">add</span>
+</button>
+</main>
+</body></html>
