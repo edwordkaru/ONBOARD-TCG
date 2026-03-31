@@ -36,6 +36,16 @@
     .theme-ygo { --game-color: #69daff; --game-hover: #004a5d; }
     .theme-pkmn { --game-color: #ffcb05; --game-hover: #4a3a00; }
     .theme-mtg { --game-color: #ff7a00; --game-hover: #4a2300; }
+
+    /* 🌟 核心修复：强制抵抗浏览器自动填充导致的白底白字，锁死深色背景 */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px #111417 inset !important;
+        -webkit-text-fill-color: white !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
 </style>
 </head>
 <body id="appBody" class="bg-background text-on-surface font-body selection:bg-[var(--game-color)] selection:text-background theme-ygo">
@@ -59,7 +69,7 @@
     </nav>
     <div class="flex items-center justify-end gap-4 w-1/4">
         <div class="relative hidden lg:block mr-4">
-            <input id="searchInput" class="bg-surface-container-lowest/50 border border-outline-variant/10 text-on-surface focus:ring-1 focus:ring-[var(--game-color)] w-64 rounded-full px-5 py-2 text-sm font-body transition-all placeholder:text-slate-500" placeholder="Live search cards..." type="text" autocomplete="off"/>
+            <input id="searchInput" spellcheck="false" autocomplete="off" class="bg-[#111417] text-white border border-white/10 focus:outline-none focus:ring-1 focus:ring-[var(--game-color)] focus:border-[var(--game-color)] w-64 rounded-full px-5 py-2 text-sm font-body transition-all placeholder:text-slate-500" placeholder="Live search cards..." type="text"/>
             <div class="absolute right-3 top-2.5 text-slate-400" id="searchIcon">
                 <span class="material-symbols-outlined text-sm">search</span>
             </div>
@@ -114,9 +124,9 @@
 
         <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
-                <span class="material-symbols-outlined text-6xl mb-4 opacity-50">search</span>
-                <p class="font-headline text-xl">Type a card name in the search bar to see live prices.</p>
-                <p class="text-sm mt-2 opacity-60">You don't need to type the exact name. Partial words work!</p>
+                <span class="material-symbols-outlined text-6xl mb-4 opacity-50 text-[var(--game-color)]">manage_search</span>
+                <p class="font-headline text-xl">Start typing to fetch live Yu-Gi-Oh! market data.</p>
+                <p class="text-sm mt-2 opacity-60">Fuzzy search active. Try typing partial names!</p>
             </div>
         </div>
     </main>
@@ -174,7 +184,7 @@
         `;
     }
 
-    // --- 3. 🌟 核心黑科技：Live 模糊搜索 (Debounce) ---
+    // --- 3. Live 模糊搜索 (Debounce) ---
     document.getElementById('searchInput').addEventListener('input', (e) => {
         // 每次打字时，清除上一次的倒计时（防止打字过程中疯狂发请求）
         clearTimeout(searchTimeout);
@@ -209,7 +219,6 @@
             let cardsToDisplay = [];
 
             if (activeMarketGame === 'ygo') {
-                // YGO: fname 支持子字符串匹配。例如输入 "dark mag" 就能出 "Dark Magician"
                 const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 if(!data.error) {
@@ -223,10 +232,7 @@
                 }
             } 
             else if (activeMarketGame === 'pkmn') {
-                // 🌟 PKMN 黑科技算法：把你的搜索词按照空格切碎，然后前后加上通配符 `*`
-                // 输入 "vmax pika" -> `name:*vmax* name:*pika*` (无视顺序，完美匹配 Pikachu VMAX!)
                 const fuzzyQueries = query.split(' ').filter(w => w.length > 0).map(w => `name:*${w}*`).join(' ');
-                
                 const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(fuzzyQueries)}`);
                 const data = await res.json();
                 if(data.data && data.data.length > 0) {
@@ -240,7 +246,6 @@
                 }
             }
             else if (activeMarketGame === 'mtg') {
-                // MTG: Scryfall 的 /search 本身就自带强大的容错和智能分词
                 const res = await fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 if(data.data && data.data.length > 0) {
@@ -274,7 +279,7 @@
             cardsToDisplay.forEach(card => {
                 const cardHTML = `
                     <div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_var(--game-color)] border border-transparent hover:border-[var(--game-color)]/30">
-                        <div class="aspect-[3/4] overflow-hidden relative">
+                        <div class="aspect-[3/4] overflow-hidden relative bg-black">
                             <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="${card.img}" alt="${card.name}"/>
                             <div class="absolute top-3 left-3 flex gap-2">
                                 <span class="bg-black/80 backdrop-blur-md text-white border border-[var(--game-color)]/50 font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter shadow-lg">EN</span>
