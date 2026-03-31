@@ -2,7 +2,7 @@
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Omni Deck Builder | Onboard Elite</title>
+<title>Pro Omni Deck Builder | Onboard Elite</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -96,7 +96,7 @@
                     <h2 class="font-headline font-bold text-lg">Main Deck</h2>
                     <span id="mainDeckCount" class="font-label text-xs font-black bg-surface-variant px-2 py-1 rounded text-[var(--game-color)]">0 / 60</span>
                 </div>
-                <div id="mainDeckGrid" class="grid grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2"></div>
+                <div id="mainDeckGrid" class="flex flex-col gap-6"></div>
             </div>
 
             <div id="extraDeckContainer" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 min-h-[150px]">
@@ -104,7 +104,7 @@
                     <h2 id="extraDeckTitle" class="font-headline font-bold text-lg text-purple-400">Extra Deck</h2>
                     <span id="extraDeckCount" class="font-label text-xs font-black bg-surface-variant px-2 py-1 rounded text-purple-400">0 / 15</span>
                 </div>
-                <div id="extraDeckGrid" class="grid grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2"></div>
+                <div id="extraDeckGrid" class="flex flex-col gap-6"></div>
             </div>
         </div>
 
@@ -156,7 +156,7 @@
             color: "#ff7a00",
             maxCopies: 4,
             mainMin: 60,
-            mainMax: 100, // 为 Commander 等赛制留冗余
+            mainMax: 100, 
             hasExtra: true,
             extraName: "Sideboard",
             extraMax: 15
@@ -164,15 +164,12 @@
     };
 
     let activeGame = 'ygo';
-    
-    // 储存三个游戏的独立卡组状态
     let decks = {
         ygo: { main: [], extra: [] },
-        pkmn: { main: [], extra: [] }, // extra array exists but won't be used
+        pkmn: { main: [], extra: [] },
         mtg: { main: [], extra: [] }
     };
 
-    // UI 节点
     const appBody = document.getElementById('appBody');
     const searchInput = document.getElementById('builderSearchInput');
     const searchResults = document.getElementById('builderSearchResults');
@@ -181,15 +178,42 @@
     const extraDeckTitle = document.getElementById('extraDeckTitle');
     
     // ---------------------------------------------------
+    // 智能分类识别函数 (核心改动)
+    // ---------------------------------------------------
+    function getCardCategory(game, typeLine) {
+        if (!typeLine) return 'Other';
+        const t = typeLine.toLowerCase();
+        
+        if (game === 'ygo') {
+            if (t.includes('spell')) return 'Spells';
+            if (t.includes('trap')) return 'Traps';
+            return 'Monsters';
+        } 
+        else if (game === 'pkmn') {
+            if (t.includes('pokémon') || t.includes('pokemon')) return 'Pokémon';
+            if (t.includes('trainer')) return 'Trainers';
+            if (t.includes('energy')) return 'Energies';
+            return 'Other';
+        } 
+        else if (game === 'mtg') {
+            if (t.includes('creature')) return 'Creatures';
+            if (t.includes('land')) return 'Lands';
+            if (t.includes('planeswalker')) return 'Planeswalkers';
+            if (t.includes('artifact')) return 'Artifacts';
+            if (t.includes('enchantment')) return 'Enchantments';
+            if (t.includes('instant') || t.includes('sorcery')) return 'Instants & Sorceries';
+            return 'Other';
+        }
+        return 'Cards';
+    }
+
+    // ---------------------------------------------------
     // 2. 游戏环境切换逻辑
     // ---------------------------------------------------
     function switchGame(gameId) {
         activeGame = gameId;
-        
-        // 更新 CSS 主题色
         appBody.className = `bg-background text-on-surface font-body selection:bg-primary selection:text-[#004a5d] overflow-hidden theme-${gameId}`;
         
-        // 更新 Tab 样式
         ['ygo', 'pkmn', 'mtg'].forEach(id => {
             const tab = document.getElementById(`tab-${id}`);
             if (id === gameId) {
@@ -199,7 +223,6 @@
             }
         });
 
-        // 根据游戏规则显示/隐藏额外卡组区
         const rules = gameRules[gameId];
         if (rules.hasExtra) {
             extraDeckContainer.style.display = 'block';
@@ -208,7 +231,6 @@
             extraDeckContainer.style.display = 'none';
         }
 
-        // 清空搜索框并重置 UI
         searchInput.value = '';
         searchResults.innerHTML = '<p class="text-center text-xs text-on-surface/40 mt-10">Search for a card in ' + rules.name + '</p>';
         showMessage(`${rules.name} format selected.`);
@@ -216,7 +238,7 @@
     }
 
     // ---------------------------------------------------
-    // 3. 搜索与 API 调用 (三合一)
+    // 3. 搜索与 API 调用
     // ---------------------------------------------------
     searchInput.addEventListener('keypress', async function (e) {
         if (e.key === 'Enter') {
@@ -236,13 +258,12 @@
                             id: c.id,
                             name: c.name,
                             img: c.card_images[0].image_url_small,
-                            type: c.type, // e.g., "Fusion Monster"
+                            type: c.type, 
                             desc: c.race
                         }));
                     }
                 } 
                 else if (activeGame === 'pkmn') {
-                    // Pokemon API 限制: 需要使用 q=name:*query* 进行模糊匹配
                     const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:*${encodeURIComponent(query)}*`);
                     const data = await res.json();
                     if(data.data && data.data.length > 0) {
@@ -250,7 +271,7 @@
                             id: c.id,
                             name: c.name,
                             img: c.images.small,
-                            type: c.supertype, // "Pokémon", "Trainer", "Energy"
+                            type: c.supertype, 
                             desc: c.subtypes ? c.subtypes.join(', ') : ''
                         }));
                     }
@@ -262,11 +283,10 @@
                         cardsToDisplay = data.data.slice(0, 20).map(c => ({
                             id: c.id,
                             name: c.name,
-                            // Scryfall 偶尔会有双面卡，没有直接的 image_uris
                             img: c.image_uris ? c.image_uris.small : (c.card_faces ? c.card_faces[0].image_uris.small : ''),
-                            type: c.type_line, // "Basic Land", "Creature", etc.
+                            type: c.type_line, 
                             desc: c.set_name
-                        })).filter(c => c.img !== ''); // 过滤掉没有图的卡
+                        })).filter(c => c.img !== ''); 
                     }
                 }
 
@@ -287,8 +307,8 @@
                             <p class="font-label text-[10px] text-slate-400 truncate">${card.type}</p>
                         </div>
                         <div class="flex flex-col justify-center pr-2 gap-2">
-                            <span class="material-symbols-outlined text-[var(--game-color)] hover:scale-125 transition-transform" title="Add to Main Deck" onclick="addCard(event, ${JSON.stringify(card).replace(/"/g, '&quot;')}, false)">add_circle</span>
-                            ${gameRules[activeGame].hasExtra ? `<span class="material-symbols-outlined text-purple-400 hover:scale-125 transition-transform text-xs" title="Add to ${gameRules[activeGame].extraName}" onclick="addCard(event, ${JSON.stringify(card).replace(/"/g, '&quot;')}, true)">library_add</span>` : ''}
+                            <span class="material-symbols-outlined text-[var(--game-color)] hover:scale-125 transition-transform" title="Add to Main Deck" onclick="addCard(event, ${JSON.stringify(card).replace(/"/g, '"')}, false)">add_circle</span>
+                            ${gameRules[activeGame].hasExtra ? `<span class="material-symbols-outlined text-purple-400 hover:scale-125 transition-transform text-xs" title="Add to ${gameRules[activeGame].extraName}" onclick="addCard(event, ${JSON.stringify(card).replace(/"/g, '"')}, true)">library_add</span>` : ''}
                         </div>
                     `;
                     searchResults.appendChild(cardRow);
@@ -313,7 +333,6 @@
     }
 
     function isCardUnlimited(card) {
-        // 豁免规则：判断是否是不受同名卡限制的基本卡
         if (activeGame === 'pkmn') {
             return card.type === 'Energy' && card.desc.includes('Basic');
         } else if (activeGame === 'mtg') {
@@ -323,12 +342,11 @@
     }
 
     function addCard(event, card, forceExtra) {
-        event.stopPropagation(); // 阻止冒泡
+        event.stopPropagation(); 
         
         const rules = gameRules[activeGame];
         const currentDeck = decks[activeGame];
         
-        // 自动分发规则 (YGO特有：额外怪兽自动去额外卡组)
         let isExtra = forceExtra;
         if (activeGame === 'ygo' && !forceExtra) {
             if (card.type.includes('Fusion') || card.type.includes('Synchro') || card.type.includes('XYZ') || card.type.includes('Link')) {
@@ -338,17 +356,15 @@
 
         const targetArray = isExtra ? currentDeck.extra : currentDeck.main;
 
-        // 检验1：同名卡数量限制
         if (!isCardUnlimited(card)) {
             const countInMain = currentDeck.main.filter(c => c.name === card.name).length;
             const countInExtra = currentDeck.extra.filter(c => c.name === card.name).length;
             if (countInMain + countInExtra >= rules.maxCopies) {
-                showMessage(`Rule Violation: Max ${rules.maxCopies} copies of "${card.name}" allowed.`, true);
+                showMessage(`Rule Violation: Max ${rules.maxCopies} copies of "${card.name}".`, true);
                 return;
             }
         }
 
-        // 检验2：主卡组/额外卡组上限
         if (isExtra) {
             if (targetArray.length >= rules.extraMax) {
                 showMessage(`Rule Violation: ${rules.extraName} limit reached (${rules.extraMax}).`, true);
@@ -383,8 +399,52 @@
     }
 
     // ---------------------------------------------------
-    // 5. 渲染 UI
+    // 5. 分类渲染 UI (核心改动)
     // ---------------------------------------------------
+    function renderDeckGroup(deckArray, containerElement, isExtra) {
+        containerElement.innerHTML = '';
+        
+        if (deckArray.length === 0) return;
+
+        // 1. 按种类分组卡牌
+        const grouped = {};
+        deckArray.forEach((card, index) => {
+            // Extra Deck 强制统一分类，或者保持原类型（这里选择保留卡牌原始类型，比如 Fusion/Synchro）
+            let category = isExtra && activeGame === 'ygo' ? card.type : getCardCategory(activeGame, card.type);
+            if (!grouped[category]) grouped[category] = [];
+            grouped[category].push({ card, index }); // 记录原始 index 用于删除
+        });
+
+        // 2. 渲染每个分组
+        for (const [category, items] of Object.entries(grouped)) {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = "w-full";
+            
+            // 分类标题与分割线
+            groupDiv.innerHTML = `
+                <div class="flex justify-between items-end border-b border-surface-variant/50 pb-1 mb-3">
+                    <h3 class="text-[11px] font-bold uppercase tracking-widest text-slate-400">${category}</h3>
+                    <span class="text-[10px] font-label text-slate-500 bg-surface-variant/50 px-2 py-0.5 rounded">${items.length}</span>
+                </div>
+                <div class="grid grid-cols-8 lg:grid-cols-10 xl:grid-cols-12 gap-2"></div>
+            `;
+            
+            const gridEl = groupDiv.querySelector('.grid');
+            
+            // 渲染该分类下的卡片
+            items.forEach(item => {
+                const img = document.createElement('img');
+                img.src = item.card.img;
+                img.className = "w-full aspect-[3/4] object-cover rounded shadow-md card-hover border border-transparent hover:border-error/80 transition-all";
+                img.title = `${item.card.name} (Click to remove)`;
+                img.onclick = () => removeCard(item.index, isExtra);
+                gridEl.appendChild(img);
+            });
+            
+            containerElement.appendChild(groupDiv);
+        }
+    }
+
     function renderDeck() {
         const rules = gameRules[activeGame];
         const currentDeck = decks[activeGame];
@@ -404,27 +464,9 @@
 
         extraCountEl.innerText = `${currentDeck.extra.length} / ${rules.extraMax}`;
 
-        // 渲染主卡组
-        mainGrid.innerHTML = '';
-        currentDeck.main.forEach((card, index) => {
-            const img = document.createElement('img');
-            img.src = card.img;
-            img.className = "w-full aspect-[3/4] object-cover rounded shadow-md card-hover border border-transparent hover:border-error/80 transition-all";
-            img.title = `${card.name} (Click to remove)`;
-            img.onclick = () => removeCard(index, false);
-            mainGrid.appendChild(img);
-        });
-
-        // 渲染额外卡组
-        extraGrid.innerHTML = '';
-        currentDeck.extra.forEach((card, index) => {
-            const img = document.createElement('img');
-            img.src = card.img;
-            img.className = "w-full aspect-[3/4] object-cover rounded shadow-md card-hover border border-transparent hover:border-error/80 transition-all";
-            img.title = `${card.name} (Click to remove)`;
-            img.onclick = () => removeCard(index, true);
-            extraGrid.appendChild(img);
-        });
+        // 使用新的分类渲染函数
+        renderDeckGroup(currentDeck.main, mainGrid, false);
+        renderDeckGroup(currentDeck.extra, extraGrid, true);
     }
 
     // 初始化
