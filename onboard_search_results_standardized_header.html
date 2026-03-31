@@ -147,7 +147,6 @@
         mtg: { name: "Magic: TG", color: "#ff7a00", source: "Scryfall API" }
     };
 
-    // 为每个游戏定义专属分类
     const gameCategories = {
         ygo: ['All', 'Monsters', 'Spells', 'Traps'],
         pkmn: ['All', 'Pokémon', 'Trainers', 'Energies'],
@@ -155,7 +154,7 @@
     };
 
     let activeMarketGame = 'ygo';
-    let activeCategory = 'All'; // 默认选中全部
+    let activeCategory = 'All'; 
     let searchTimeout = null;
 
     // --- 2. 智能卡牌识别函数 ---
@@ -204,7 +203,6 @@
         html += `</div>`;
         container.innerHTML = html;
 
-        // 更新大标题旁边的徽章
         const badge = document.getElementById('activeCategoryBadge');
         if (activeCategory !== 'All') {
             badge.style.display = 'flex';
@@ -214,12 +212,10 @@
         }
     }
 
-    // 点击分类时触发
     function setCategory(cat) {
         activeCategory = cat;
         renderCategoryFilters();
         
-        // 重新触发搜索以应用新的过滤规则
         const query = document.getElementById('searchInput').value.trim();
         if (query) {
             triggerSearch(query);
@@ -229,7 +225,7 @@
     // --- 4. 侧边栏游戏切换逻辑 ---
     function setMarketGame(gameId) {
         activeMarketGame = gameId;
-        activeCategory = 'All'; // 切换游戏时重置分类
+        activeCategory = 'All'; 
         
         document.getElementById('appBody').className = `bg-background text-on-surface font-body selection:bg-[var(--game-color)] selection:text-background theme-${gameId}`;
         document.getElementById('marketTitle').innerText = `${gameConfig[gameId].name} Market`;
@@ -246,7 +242,7 @@
             }
         });
 
-        renderCategoryFilters(); // 刷新分类菜单
+        renderCategoryFilters(); 
 
         const inputEl = document.getElementById('searchInput');
         inputEl.value = '';
@@ -295,13 +291,12 @@
                 const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 if(!data.error) {
-                    // 一次性多抓取一些用于过滤（最多60张）
                     allFetchedCards = data.data.slice(0, 60).map(c => ({
                         id: c.id, 
                         name: c.name, 
                         img: c.card_images[0].image_url, 
                         rarity: c.type.includes("Monster") ? "Monster Card" : "Spell/Trap",
-                        rawType: c.type, // 用于分类器
+                        rawType: c.type, 
                         price: c.card_prices[0]?.tcgplayer_price || "0.00"
                     }));
                 }
@@ -316,7 +311,7 @@
                         name: c.name, 
                         img: c.images.large || c.images.small, 
                         rarity: c.rarity || c.supertype,
-                        rawType: c.supertype, // 用于分类器
+                        rawType: c.supertype, 
                         price: c.tcgplayer?.prices?.holofoil?.market || c.tcgplayer?.prices?.normal?.market || "0.00"
                     }));
                 }
@@ -330,21 +325,18 @@
                         name: c.name, 
                         img: c.image_uris ? c.image_uris.normal : (c.card_faces ? c.card_faces[0].image_uris.normal : ''), 
                         rarity: c.rarity,
-                        rawType: c.type_line, // 用于分类器
+                        rawType: c.type_line, 
                         price: c.prices.usd || "0.00"
                     })).filter(c => c.img !== ''); 
                 }
             }
 
-            // 🌟 核心过滤引擎：应用用户在侧边栏选择的分类 🌟
             if (activeCategory !== 'All') {
                 allFetchedCards = allFetchedCards.filter(card => getCardCategory(activeMarketGame, card.rawType) === activeCategory);
             }
 
-            // 截取过滤后的前 16 张展示
             const cardsToDisplay = allFetchedCards.slice(0, 16);
 
-            // --- 渲染结果 ---
             searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm">search</span>`;
 
             if (cardsToDisplay.length === 0) {
@@ -365,6 +357,9 @@
             grid.innerHTML = '';
 
             cardsToDisplay.forEach(card => {
+                // 🌟 核心修改点：替换为带有参数的动态详情页链接 🌟
+                const detailLink = `onboard_card_detail_standardized_header.html?game=${activeMarketGame}&id=${card.id}`;
+
                 const cardHTML = `
                     <div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_var(--game-color)] border border-transparent hover:border-[var(--game-color)]/30">
                         <div class="aspect-[3/4] overflow-hidden relative bg-black">
@@ -394,7 +389,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="onboard_card_detail_standardized_header.html" class="w-full py-2.5 bg-background border border-white/5 text-slate-300 text-xs font-bold rounded-lg hover:bg-[var(--game-color)] hover:text-background hover:border-transparent transition-all block text-center shadow-md">
+                            <a href="${detailLink}" class="w-full py-2.5 bg-background border border-white/5 text-slate-300 text-xs font-bold rounded-lg hover:bg-[var(--game-color)] hover:text-background hover:border-transparent transition-all block text-center shadow-md">
                                 View Details
                             </a>
                         </div>
@@ -410,7 +405,6 @@
         }
     }
 
-    // 初始化渲染侧边栏分类
     renderCategoryFilters();
 
 </script>
