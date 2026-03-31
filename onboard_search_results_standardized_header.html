@@ -37,7 +37,7 @@
     .theme-pkmn { --game-color: #ffcb05; --game-hover: #4a3a00; }
     .theme-mtg { --game-color: #ff7a00; --game-hover: #4a2300; }
 
-    /* 🌟 核心修复：强制抵抗浏览器自动填充导致的白底白字，锁死深色背景 */
+    /* 强制抵抗浏览器自动填充导致的白底白字，锁死深色背景 */
     input:-webkit-autofill,
     input:-webkit-autofill:hover, 
     input:-webkit-autofill:focus, 
@@ -87,10 +87,9 @@
 
 <div class="flex pt-20 min-h-screen">
     <aside class="fixed left-0 top-0 h-full w-64 bg-[#080a0d] flex flex-col z-40 shadow-[24px_0_48px_rgba(0,0,0,0.4)] pt-24 overflow-y-auto border-r border-white/5">
-        <div class="px-6 mb-8">
+        <div class="px-6 mb-6">
             <h3 class="font-headline font-black text-[var(--game-color)] uppercase text-xs tracking-widest mb-4 transition-colors">Market Universe</h3>
-            
-            <div class="space-y-2 mb-8">
+            <div class="space-y-2">
                 <button id="btn-ygo" onclick="setMarketGame('ygo')" class="w-full text-left bg-slate-900 text-[#69daff] border-r-4 border-[#69daff] px-4 py-3 flex items-center gap-3 text-sm font-bold transition-all rounded-l-lg shadow-md">
                     <span class="material-symbols-outlined text-sm">auto_awesome</span> Yu-Gi-Oh!
                 </button>
@@ -101,7 +100,12 @@
                     <span class="material-symbols-outlined text-sm">castle</span> Magic: TG
                 </button>
             </div>
+        </div>
 
+        <div id="dynamicCategoryFilters" class="px-6 mb-8">
+            </div>
+
+        <div class="px-6 mt-auto mb-8">
             <div class="bg-surface-container-low p-4 rounded-lg border border-white/5">
                 <p class="text-[10px] uppercase font-label text-slate-500 tracking-widest mb-2">Data Source</p>
                 <p id="dataSourceLabel" class="text-xs font-bold text-white flex items-center gap-2">
@@ -120,95 +124,164 @@
                 </div>
                 <h1 id="marketTitle" class="font-headline text-5xl font-black text-white tracking-tighter">Yu-Gi-Oh! Market</h1>
             </div>
+            <div id="activeCategoryBadge" class="hidden flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full text-xs font-bold border border-outline-variant/10 text-[var(--game-color)]">
+                <span class="material-symbols-outlined text-sm">filter_alt</span> <span id="activeCategoryText">All Cards</span>
+            </div>
         </header>
 
         <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
                 <span class="material-symbols-outlined text-6xl mb-4 opacity-50 text-[var(--game-color)]">manage_search</span>
                 <p class="font-headline text-xl">Start typing to fetch live Yu-Gi-Oh! market data.</p>
-                <p class="text-sm mt-2 opacity-60">Fuzzy search active. Try typing partial names!</p>
+                <p class="text-sm mt-2 opacity-60">Fuzzy search & Category filters active!</p>
             </div>
         </div>
     </main>
 </div>
 
 <script>
-    // --- 1. 游戏配置状态 ---
+    // --- 1. 全局数据与配置 ---
     const gameConfig = {
         ygo: { name: "Yu-Gi-Oh!", color: "#69daff", source: "TCGPlayer API" },
         pkmn: { name: "Pokémon", color: "#ffcb05", source: "Pokémon TCG API" },
         mtg: { name: "Magic: TG", color: "#ff7a00", source: "Scryfall API" }
     };
 
+    // 为每个游戏定义专属分类
+    const gameCategories = {
+        ygo: ['All', 'Monsters', 'Spells', 'Traps'],
+        pkmn: ['All', 'Pokémon', 'Trainers', 'Energies'],
+        mtg: ['All', 'Creatures', 'Instants & Sorceries', 'Lands', 'Artifacts', 'Enchantments', 'Planeswalkers']
+    };
+
     let activeMarketGame = 'ygo';
+    let activeCategory = 'All'; // 默认选中全部
     let searchTimeout = null;
 
-    // --- 2. 侧边栏游戏切换逻辑 ---
+    // --- 2. 智能卡牌识别函数 ---
+    function getCardCategory(game, typeLine) {
+        if (!typeLine) return 'Other';
+        const t = typeLine.toLowerCase();
+        
+        if (game === 'ygo') {
+            if (t.includes('spell')) return 'Spells';
+            if (t.includes('trap')) return 'Traps';
+            return 'Monsters';
+        } 
+        else if (game === 'pkmn') {
+            if (t.includes('pokémon') || t.includes('pokemon')) return 'Pokémon';
+            if (t.includes('trainer')) return 'Trainers';
+            if (t.includes('energy')) return 'Energies';
+            return 'Other';
+        } 
+        else if (game === 'mtg') {
+            if (t.includes('creature')) return 'Creatures';
+            if (t.includes('land')) return 'Lands';
+            if (t.includes('planeswalker')) return 'Planeswalkers';
+            if (t.includes('artifact')) return 'Artifacts';
+            if (t.includes('enchantment')) return 'Enchantments';
+            if (t.includes('instant') || t.includes('sorcery')) return 'Instants & Sorceries';
+            return 'Other';
+        }
+        return 'Cards';
+    }
+
+    // --- 3. 侧边栏动态过滤菜单渲染 ---
+    function renderCategoryFilters() {
+        const container = document.getElementById('dynamicCategoryFilters');
+        const cats = gameCategories[activeMarketGame];
+        
+        let html = `<h3 class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-3">Filter by Category</h3><div class="space-y-1">`;
+        
+        cats.forEach(cat => {
+            const isActive = activeCategory === cat;
+            const bgClass = isActive 
+                ? 'bg-[var(--game-color)]/20 text-[var(--game-color)] border-l-4 border-[var(--game-color)] font-bold' 
+                : 'text-slate-400 hover:bg-white/5 border-l-4 border-transparent hover:border-slate-500 font-medium';
+            
+            html += `<button onclick="setCategory('${cat}')" class="w-full text-left px-4 py-2 text-xs transition-all rounded-r-lg ${bgClass}">${cat}</button>`;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+
+        // 更新大标题旁边的徽章
+        const badge = document.getElementById('activeCategoryBadge');
+        if (activeCategory !== 'All') {
+            badge.style.display = 'flex';
+            document.getElementById('activeCategoryText').innerText = activeCategory;
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    // 点击分类时触发
+    function setCategory(cat) {
+        activeCategory = cat;
+        renderCategoryFilters();
+        
+        // 重新触发搜索以应用新的过滤规则
+        const query = document.getElementById('searchInput').value.trim();
+        if (query) {
+            triggerSearch(query);
+        }
+    }
+
+    // --- 4. 侧边栏游戏切换逻辑 ---
     function setMarketGame(gameId) {
         activeMarketGame = gameId;
+        activeCategory = 'All'; // 切换游戏时重置分类
         
-        // 1. 更新网页的主题 CSS
         document.getElementById('appBody').className = `bg-background text-on-surface font-body selection:bg-[var(--game-color)] selection:text-background theme-${gameId}`;
-        
-        // 2. 更新大标题
         document.getElementById('marketTitle').innerText = `${gameConfig[gameId].name} Market`;
         document.getElementById('dataSourceLabel').innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> ${gameConfig[gameId].source}`;
 
-        // 3. 更新左侧边栏按钮样式
         ['ygo', 'pkmn', 'mtg'].forEach(id => {
             const btn = document.getElementById(`btn-${id}`);
             if (id === gameId) {
-                // 激活状态：变成游戏专属色，带背景和边框
                 if(gameId === 'ygo') btn.className = "w-full text-left bg-slate-900 text-[#69daff] border-r-4 border-[#69daff] px-4 py-3 flex items-center gap-3 text-sm font-bold transition-all rounded-l-lg shadow-md";
                 if(gameId === 'pkmn') btn.className = "w-full text-left bg-yellow-900/20 text-[#ffcb05] border-r-4 border-[#ffcb05] px-4 py-3 flex items-center gap-3 text-sm font-bold transition-all rounded-l-lg shadow-md";
                 if(gameId === 'mtg') btn.className = "w-full text-left bg-orange-900/20 text-[#ff7a00] border-r-4 border-[#ff7a00] px-4 py-3 flex items-center gap-3 text-sm font-bold transition-all rounded-l-lg shadow-md";
             } else {
-                // 未激活状态：灰色
                 btn.className = "w-full text-left text-slate-500 hover:bg-white/5 border-r-4 border-transparent px-4 py-3 flex items-center gap-3 text-sm font-medium transition-all rounded-l-lg";
             }
         });
 
-        // 4. 清空搜索框并重置网格
+        renderCategoryFilters(); // 刷新分类菜单
+
         const inputEl = document.getElementById('searchInput');
         inputEl.value = '';
         inputEl.placeholder = `Live search ${gameConfig[gameId].name} cards...`;
         document.getElementById('searchStatus').innerText = "Global Index Ranking";
         
-        // 恢复默认提示语
         document.getElementById('resultsGrid').innerHTML = `
             <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
                 <span class="material-symbols-outlined text-6xl mb-4 opacity-50 text-[var(--game-color)]">manage_search</span>
                 <p class="font-headline text-xl">Start typing to fetch live ${gameConfig[gameId].name} market data.</p>
-                <p class="text-sm mt-2 opacity-60">Fuzzy search active. Try typing partial names!</p>
+                <p class="text-sm mt-2 opacity-60">Fuzzy search & Category filters active!</p>
             </div>
         `;
     }
 
-    // --- 3. Live 模糊搜索 (Debounce) ---
+    // --- 5. 模糊搜索绑定 ---
     document.getElementById('searchInput').addEventListener('input', (e) => {
-        // 每次打字时，清除上一次的倒计时（防止打字过程中疯狂发请求）
         clearTimeout(searchTimeout);
         const query = e.target.value.trim();
         const searchIcon = document.getElementById('searchIcon');
-        const searchStatus = document.getElementById('searchStatus');
 
         if (query.length === 0) {
             searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm">search</span>`;
             return;
         }
 
-        // 变成加载动画
         searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin text-[var(--game-color)]">refresh</span>`;
-        searchStatus.innerText = "Analyzing query...";
-
-        // 设置 0.5 秒的停顿判定：只要你停下手 0.5 秒，立刻执行搜索！
+        
         searchTimeout = setTimeout(() => {
-            fetchMarketCards(query);
+            triggerSearch(query);
         }, 500); 
     });
 
-    // --- 4. 智能多维度 API 查询 ---
-    async function fetchMarketCards(query) {
+    // --- 6. API 拉取与智能过滤 ---
+    async function triggerSearch(query) {
         const grid = document.getElementById('resultsGrid');
         const searchStatus = document.getElementById('searchStatus');
         const searchIcon = document.getElementById('searchIcon');
@@ -216,17 +289,19 @@
         searchStatus.innerText = `Hooking live market data for "${query}"...`;
 
         try {
-            let cardsToDisplay = [];
+            let allFetchedCards = [];
 
             if (activeMarketGame === 'ygo') {
                 const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 if(!data.error) {
-                    cardsToDisplay = data.data.slice(0, 16).map(c => ({
+                    // 一次性多抓取一些用于过滤（最多60张）
+                    allFetchedCards = data.data.slice(0, 60).map(c => ({
                         id: c.id, 
                         name: c.name, 
                         img: c.card_images[0].image_url, 
                         rarity: c.type.includes("Monster") ? "Monster Card" : "Spell/Trap",
+                        rawType: c.type, // 用于分类器
                         price: c.card_prices[0]?.tcgplayer_price || "0.00"
                     }));
                 }
@@ -236,11 +311,12 @@
                 const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(fuzzyQueries)}`);
                 const data = await res.json();
                 if(data.data && data.data.length > 0) {
-                    cardsToDisplay = data.data.slice(0, 16).map(c => ({
+                    allFetchedCards = data.data.slice(0, 60).map(c => ({
                         id: c.id, 
                         name: c.name, 
                         img: c.images.large || c.images.small, 
                         rarity: c.rarity || c.supertype,
+                        rawType: c.supertype, // 用于分类器
                         price: c.tcgplayer?.prices?.holofoil?.market || c.tcgplayer?.prices?.normal?.market || "0.00"
                     }));
                 }
@@ -249,32 +325,44 @@
                 const res = await fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 if(data.data && data.data.length > 0) {
-                    cardsToDisplay = data.data.slice(0, 16).map(c => ({
+                    allFetchedCards = data.data.slice(0, 60).map(c => ({
                         id: c.id, 
                         name: c.name, 
                         img: c.image_uris ? c.image_uris.normal : (c.card_faces ? c.card_faces[0].image_uris.normal : ''), 
                         rarity: c.rarity,
+                        rawType: c.type_line, // 用于分类器
                         price: c.prices.usd || "0.00"
                     })).filter(c => c.img !== ''); 
                 }
             }
 
+            // 🌟 核心过滤引擎：应用用户在侧边栏选择的分类 🌟
+            if (activeCategory !== 'All') {
+                allFetchedCards = allFetchedCards.filter(card => getCardCategory(activeMarketGame, card.rawType) === activeCategory);
+            }
+
+            // 截取过滤后的前 16 张展示
+            const cardsToDisplay = allFetchedCards.slice(0, 16);
+
             // --- 渲染结果 ---
             searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm">search</span>`;
 
             if (cardsToDisplay.length === 0) {
+                let errorMsg = `No assets found for "${query}"`;
+                if (activeCategory !== 'All') errorMsg += ` in category [${activeCategory}]`;
+                
                 searchStatus.innerText = "0 results found.";
                 grid.innerHTML = `
                     <div class="col-span-full py-20 flex flex-col items-center justify-center text-error">
                         <span class="material-symbols-outlined text-6xl mb-4 opacity-80">sentiment_dissatisfied</span>
-                        <p class="font-headline text-xl">No assets found for "${query}"</p>
-                        <p class="text-sm mt-2 opacity-60 text-slate-400">Try using fewer words or check spelling.</p>
+                        <p class="font-headline text-xl">${errorMsg}</p>
+                        <p class="text-sm mt-2 opacity-60 text-slate-400">Try changing the category filter or check spelling.</p>
                     </div>`;
                 return;
             }
 
             searchStatus.innerText = `Displaying top ${cardsToDisplay.length} market results`;
-            grid.innerHTML = ''; // 清空网格
+            grid.innerHTML = '';
 
             cardsToDisplay.forEach(card => {
                 const cardHTML = `
@@ -306,7 +394,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="onboard_card_detail_standardized_header.html" class="w-full py-2.5 bg-background border border-white/5 text-slate-300 text-xs font-bold rounded-lg hover:bg-[var(--game-color)] hover:text-[var(--game-hover)] hover:border-transparent transition-all block text-center shadow-md">
+                            <a href="onboard_card_detail_standardized_header.html" class="w-full py-2.5 bg-background border border-white/5 text-slate-300 text-xs font-bold rounded-lg hover:bg-[var(--game-color)] hover:text-background hover:border-transparent transition-all block text-center shadow-md">
                                 View Details
                             </a>
                         </div>
@@ -321,6 +409,9 @@
             grid.innerHTML = '<p class="text-error font-headline text-xl col-span-full text-center py-12">Database connection failed. 数据库连接失败。</p>';
         }
     }
+
+    // 初始化渲染侧边栏分类
+    renderCategoryFilters();
 
 </script>
 </body>
