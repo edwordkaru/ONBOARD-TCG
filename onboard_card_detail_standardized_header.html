@@ -1,491 +1,344 @@
 <!DOCTYPE html>
-
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Digital Vault | Onboard Card Detail</title>
+<title>Digital Vault | Card Detail</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
       theme: {
         extend: {
           colors: {
-            "tertiary-container": "#ff005c",
-            "on-primary": "#004a5d",
-            "inverse-on-surface": "#535559",
-            "tertiary-fixed-dim": "#ff788d",
-            "primary-container": "#00cffc",
-            "surface-dim": "#0c0e11",
-            "surface-container-highest": "#23262a",
-            "on-secondary-fixed": "#41009a",
-            "inverse-primary": "#006880",
-            "tertiary-fixed": "#ff909e",
-            "surface": "#0c0e11",
-            "on-tertiary-container": "#000000",
-            "on-tertiary-fixed": "#39000e",
-            "on-primary-fixed-variant": "#004a5c",
-            "on-primary-fixed": "#002a35",
+            "primary": "#69daff",
             "secondary": "#ac89ff",
             "tertiary": "#ff6e85",
-            "on-tertiary-fixed-variant": "#780027",
-            "surface-container-low": "#111417",
-            "on-surface-variant": "#aaabaf",
-            "on-tertiary": "#480014",
-            "error-container": "#9f0519",
-            "surface-container": "#171a1d",
-            "secondary-fixed": "#dac9ff",
-            "error-dim": "#d7383b",
-            "primary-fixed": "#00cffc",
-            "primary": "#69daff",
-            "outline-variant": "#46484b",
-            "on-background": "#f9f9fd",
-            "secondary-fixed-dim": "#ceb9ff",
-            "secondary-container": "#7000ff",
             "error": "#ff716c",
-            "surface-variant": "#23262a",
-            "on-primary-container": "#004050",
-            "primary-dim": "#00c0ea",
-            "surface-bright": "#292c31",
-            "on-surface": "#f9f9fd",
-            "secondary-dim": "#874cff",
-            "on-error": "#490006",
-            "tertiary-dim": "#e70053",
-            "on-secondary-container": "#f8f1ff",
-            "outline": "#747579",
-            "inverse-surface": "#f9f9fd",
-            "primary-fixed-dim": "#00c0ea",
-            "on-secondary": "#290067",
-            "surface-container-high": "#1d2024",
-            "on-error-container": "#ffa8a3",
-            "surface-tint": "#69daff",
             "background": "#0c0e11",
-            "on-secondary-fixed-variant": "#6300e2",
-            "surface-container-lowest": "#000000"
+            "surface-container": "#171a1d",
+            "surface-container-low": "#111417",
+            "surface-container-highest": "#23262a",
+            "on-surface": "#f9f9fd",
+            "on-surface-variant": "#aaabaf",
+            "outline-variant": "#46484b",
           },
           fontFamily: {
             "headline": ["Space Grotesk"],
             "body": ["Manrope"],
             "label": ["Inter"]
-          },
-          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-        },
-      },
+          }
+        }
+      }
     }
   </script>
 <style>
-    .material-symbols-outlined {
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-    }
-    .glass-effect {
-      background: rgba(35, 38, 42, 0.6);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(105, 218, 255, 0.1);
-    }
-    .card-glow {
-      box-shadow: 0 0 40px rgba(105, 218, 255, 0.15);
-    }
-    body {
-      background-color: #0c0e11;
-      color: #f9f9fd;
-    }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .glass-effect { background: rgba(35, 38, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(105, 218, 255, 0.1); }
+    .card-glow { box-shadow: 0 0 40px rgba(105, 218, 255, 0.15); }
+    /* 游戏主题色变量 */
+    .theme-ygo { --game-color: #69daff; }
+    .theme-pkmn { --game-color: #ffcb05; }
+    .theme-mtg { --game-color: #ff7a00; }
   </style>
 </head>
-<body class="font-body selection:bg-primary selection:text-on-primary-container">
-<!-- TopAppBar Section -->
-<header class="bg-[#0c0e11] dark:bg-[#0c0e11] flex justify-between items-center w-full px-6 py-4 h-20 docked full-width top-0 z-50 border-b border-[#23262a]/30 shadow-[0_24px_48px_rgba(0,0,0,0.4)] fixed">
-<div class="flex items-center w-1/4">
-<a href="index.html" class="flex items-center gap-3 group cursor-pointer">
-<img alt="Onboard Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uj9tE9aJKEn5prVJMPWSgFkk86I0ROmzEbe9DLWImJa6WmhhTwNiexAOFgaa0qw-nqqXLN0nkYatbrxIlr8Hf_AJ1jP8ty6nkmmKZrbCfcODygZXShyfyNyjEDsqJU1pq484mK5EQn-VH3pukRhsNvEcCsGqvFkeqdzqnqLszir-RaIJGyhQZ8vPB0tMBvjV-9LK9D4wbNOLYsxk5_IUMQkrTobNro4pD_NzWb03P6qX3AcH5Ari1ilEPkn"/>
-<span class="text-4xl font-bold tracking-tight text-[#69daff] font-['Space_Grotesk']">Onboard</span>
-</a>
-</div>
-<nav class="flex-1 flex justify-center items-center gap-12 font-['Space_Grotesk'] font-medium tracking-[0.1em] text-[13px] uppercase">
-<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="onboard_search_results_standardized_header.html">Market</a>
-<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="onboard_watchlist_standardized_header.html">Watchlist</a>
-<div class="relative flex flex-col items-center">
-<a class="text-[#69daff] font-bold whitespace-nowrap" href="onboard_deck_builder_standardized_header.html">Deck Builder</a>
-<div class="absolute -bottom-2 w-full h-1 bg-[#69daff] rounded-full"></div>
-</div>
-<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="onboard_my_collection_standardized_header.html">Collection</a>
-<a class="text-[#f9f9fd]/50 hover:text-[#69daff] transition-colors whitespace-nowrap" href="onboard_seller_hub_standardized_header.html">Seller Hub</a>
-</nav>
-<div class="flex items-center justify-end gap-4 w-1/4">
-<div class="relative hidden lg:block mr-4">
-<input class="bg-surface-container-lowest/50 border border-outline-variant/10 text-on-surface focus:ring-1 focus:ring-primary/30 w-48 rounded-full px-5 py-1.5 text-xs font-body" placeholder="Search the vault..." type="text"/>
-<div class="absolute right-3 top-2 text-on-surface-variant">
-<span class="material-symbols-outlined text-xs">search</span>
-</div>
-</div>
-<div class="flex items-center gap-1">
-<button class="p-2 hover:bg-[#171a1d] transition-all duration-200 rounded-full">
-<span class="material-symbols-outlined text-[#69daff]" data-icon="account_balance_wallet">account_balance_wallet</span>
-</button>
-<button class="p-2 hover:bg-[#171a1d] transition-all duration-200 rounded-full relative">
-<span class="material-symbols-outlined text-[#69daff]" data-icon="notifications">notifications</span>
-<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full border-2 border-[#0c0e11]"></span>
-</button>
-<div class="w-9 h-9 rounded-full bg-surface-container-highest overflow-hidden ml-2 border border-outline-variant/30">
-<img class="w-full h-full object-cover" data-alt="user avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1oC1axstDPvxy7g1rpa1_R6WaPvmsh6MRPV0VwxQRnTw8Gu3CAPYaQa5-Abo2LOBz6PMcEITb2LwEQSjnTuAAltject8-5saG4CHFctYnNjlfOh3UjZHrafjYddc6TToIgQoMILhFGG9zd3QNBuOR4BZVPGts3XLzOlWLVtH7fCo7ljv7hH8KFncJ3E519BRvYCOyUv6zZEGUBDclxtioynXYzA48ymxdytXG1DU2Vo0e0y7APgrH1gCQ6Zj__67IsWDQn0XRCEnB"/>
-</div>
-</div>
-</div>
-</header>
-<main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-<!-- Hero Section / Card Display -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-<!-- Left: Card Image & Atmosphere -->
-<div class="lg:col-span-5 flex flex-col gap-6">
-<div class="relative group">
-<!-- Decorative Background Aura -->
-<div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-secondary/20 blur-3xl rounded-full opacity-50"></div>
-<div class="relative rounded-3xl overflow-hidden glass-effect p-4 card-glow transition-transform duration-500 hover:scale-[1.02]">
-<img class="w-full h-auto rounded-2xl shadow-2xl" data-alt="ultra-high resolution professional photograph of a rare collectible holographic trading card with shimmering prismatic light effects" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtvZg7KXXlNG6qIXA3zI6JpGvhPzoXoAHpv2kzCTgmN2jMO4eN1I-4N-vBMHswUlghC-f_gdUN5QSAalSnUk39g5jN0MVUiOcPSDTu5B_P82wJUWjN11S9RfvmliL2az3LN2PYoVVAfWxJGPZAZCdT6dMlachtLEHVarKLpWzq-stcxXK805QzjZ_1n19pmAveOi_nyis5tckBYrle43X7KYcsoHY64kwG97djXWEsA9d4TNkZRuwm9HAlTvQbb_u-Jk7J35CO5sVb"/>
-</div>
-</div>
-<div class="grid grid-cols-2 gap-4">
-<button class="bg-primary text-on-primary-container font-headline font-bold py-4 rounded-full flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span>
-            Add to Deck
-          </button>
-<button class="bg-surface-container-highest border border-outline-variant/30 text-on-surface font-headline font-bold py-4 rounded-full flex items-center justify-center gap-2 hover:bg-surface-bright transition-all">
-<span class="material-symbols-outlined">favorite</span>
-            Watchlist
-          </button>
-</div>
-</div>
-<!-- Right: Data & Stats -->
-<div class="lg:col-span-7 flex flex-col gap-10">
-<div>
-<div class="flex items-center gap-3 mb-2">
-<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-widest font-bold border border-tertiary/20">Secret Rare</span>
-<span class="bg-primary/10 text-primary px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-widest font-bold border border-primary/20">1st Edition</span>
-</div>
-<h1 class="text-6xl font-headline font-extrabold tracking-tighter text-on-surface mb-2">Blue-Eyes White Dragon</h1>
-<p class="text-on-surface-variant font-body text-lg leading-relaxed max-w-xl">
-            This legendary dragon is a powerful engine of destruction. Virtually invincible, very few have faced this awesome creature and lived to tell the tale.
-          </p>
-</div>
-<!-- Spec Grid -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
-<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Set Name</p>
-<p class="font-headline font-bold text-on-surface">Legend of Blue Eyes</p>
-</div>
-<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
-<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Card Number</p>
-<p class="font-headline font-bold text-on-surface">LOB-001</p>
-</div>
-<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
-<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Legality</p>
-<p class="font-headline font-bold text-primary">Standard</p>
-</div>
-<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
-<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Population</p>
-<p class="font-headline font-bold text-on-surface">428 Verified</p>
-</div>
-</div>
-<!-- Market Snap -->
-<div class="bg-surface-container-highest rounded-3xl p-8 glass-effect">
-<div class="flex items-end justify-between mb-6">
-<div>
-<p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Current Market Value</p>
-<h2 class="text-5xl font-headline font-black text-on-surface">$12,450.00</h2>
-</div>
-<div class="text-right">
-<span class="flex items-center gap-1 text-primary font-headline font-bold text-xl">
-<span class="material-symbols-outlined">trending_up</span>
-                +14.2%
-              </span>
-<p class="text-on-surface-variant font-label text-[10px] uppercase tracking-widest mt-1">Last 7 Days</p>
-</div>
-</div>
-<!-- Simple Sparkline Mock -->
-<div class="w-full h-24 bg-surface-container-lowest/50 rounded-xl relative overflow-hidden flex items-end">
-<div class="absolute inset-0 flex items-center justify-center opacity-10">
-<span class="material-symbols-outlined text-6xl">show_chart</span>
-</div>
-<div class="w-full h-full bg-gradient-to-t from-primary/10 to-transparent"></div>
-<svg class="absolute bottom-0 left-0 w-full h-16" preserveaspectratio="none" viewbox="0 0 100 20">
-<path d="M0 20 Q 10 18, 20 15 T 40 12 T 60 8 T 80 14 T 100 4" fill="none" stroke="#69daff" stroke-width="0.5"></path>
-</svg>
-</div>
-</div>
-</div>
-</div>
-<!-- Vendor Comparison Table -->
-<section class="mt-20">
-<div class="flex items-center justify-between mb-8">
-<h3 class="text-3xl font-headline font-bold tracking-tight">Marketplace Intelligence</h3>
-<div class="flex gap-2">
-<span class="flex items-center gap-1 text-[11px] font-label text-on-surface-variant">
-<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-            LIVE UPDATES
-          </span>
-</div>
-</div>
-<div class="bg-surface-container-low rounded-3xl overflow-hidden border border-outline-variant/10">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-surface-container border-b border-outline-variant/10">
-<th class="py-5 px-8 font-label text-[11px] text-on-surface-variant uppercase tracking-widest">Vendor</th>
-<th class="py-5 px-8 font-label text-[11px] text-on-surface-variant uppercase tracking-widest">Condition</th>
-<th class="py-5 px-8 font-label text-[11px] text-on-surface-variant uppercase tracking-widest">24h Trend</th>
-<th class="py-5 px-8 font-label text-[11px] text-on-surface-variant uppercase tracking-widest">Listing Price</th>
-<th class="py-5 px-8 text-right font-label text-[11px] text-on-surface-variant uppercase tracking-widest">Action</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-outline-variant/5">
-<!-- TCGPlayer -->
-<tr class="hover:bg-surface-container-highest transition-colors group">
-<td class="py-6 px-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-primary">shopping_cart</span>
-</div>
-<div>
-<p class="font-headline font-bold text-on-surface">TCGPlayer</p>
-<p class="text-[10px] text-on-surface-variant font-label">Official Partner</p>
-</div>
-</div>
-</td>
-<td class="py-6 px-8">
-<span class="px-3 py-1 bg-surface-container-highest text-on-surface rounded-full text-xs font-bold border border-outline-variant/20">Near Mint (NM)</span>
-</td>
-<td class="py-6 px-8">
-<div class="flex items-center gap-1 text-primary">
-<span class="material-symbols-outlined text-sm">trending_up</span>
-<span class="font-label font-bold text-sm">+2.4%</span>
-</div>
-</td>
-<td class="py-6 px-8">
-<p class="font-headline font-black text-xl text-on-surface">$12,199.00</p>
-</td>
-<td class="py-6 px-8 text-right">
-<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-headline font-bold text-sm hover:brightness-110 transition-all">Buy Now</button>
-</td>
-</tr>
-<!-- Cardmarket -->
-<tr class="hover:bg-surface-container-highest transition-colors group">
-<td class="py-6 px-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-secondary">explore</span>
-</div>
-<div>
-<p class="font-headline font-bold text-on-surface">Cardmarket</p>
-<p class="text-[10px] text-on-surface-variant font-label">Europe Central</p>
-</div>
-</div>
-</td>
-<td class="py-6 px-8">
-<span class="px-3 py-1 bg-surface-container-highest text-on-surface rounded-full text-xs font-bold border border-outline-variant/20">Excellent (EX)</span>
-</td>
-<td class="py-6 px-8">
-<div class="flex items-center gap-1 text-on-surface-variant">
-<span class="material-symbols-outlined text-sm">horizontal_rule</span>
-<span class="font-label font-bold text-sm">0.0%</span>
-</div>
-</td>
-<td class="py-6 px-8">
-<p class="font-headline font-black text-xl text-on-surface">€10,850.00</p>
-</td>
-<td class="py-6 px-8 text-right">
-<button class="bg-surface-container-highest text-on-surface border border-outline-variant/40 px-6 py-2 rounded-full font-headline font-bold text-sm hover:bg-surface-bright transition-all">Visit Store</button>
-</td>
-</tr>
-<!-- eBay -->
-<tr class="hover:bg-surface-container-highest transition-colors group">
-<td class="py-6 px-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-tertiary">gavel</span>
-</div>
-<div>
-<p class="font-headline font-bold text-on-surface">eBay Auctions</p>
-<p class="text-[10px] text-on-surface-variant font-label">Bidding Live</p>
-</div>
-</div>
-</td>
-<td class="py-6 px-8">
-<span class="px-3 py-1 bg-tertiary/10 text-tertiary rounded-full text-xs font-bold border border-tertiary/20 tracking-tighter">PSA 10 GEM MINT</span>
-</td>
-<td class="py-6 px-8">
-<div class="flex items-center gap-1 text-error">
-<span class="material-symbols-outlined text-sm">trending_down</span>
-<span class="font-label font-bold text-sm">-1.2%</span>
-</div>
-</td>
-<td class="py-6 px-8">
-<p class="font-headline font-black text-xl text-on-surface">$13,500.00</p>
-</td>
-<td class="py-6 px-8 text-right">
-<button class="bg-tertiary text-on-tertiary-container px-6 py-2 rounded-full font-headline font-bold text-sm hover:brightness-110 transition-all">Place Bid</button>
-</td>
-</tr>
-<!-- Troll and Toad -->
-<tr class="hover:bg-surface-container-highest transition-colors group">
-<td class="py-6 px-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-primary">store</span>
-</div>
-<div>
-<p class="font-headline font-bold text-on-surface">Troll and Toad</p>
-<p class="text-[10px] text-on-surface-variant font-label">Direct Seller</p>
-</div>
-</div>
-</td>
-<td class="py-6 px-8">
-<span class="px-3 py-1 bg-surface-container-highest text-on-surface rounded-full text-xs font-bold border border-outline-variant/20">Near Mint (NM)</span>
-</td>
-<td class="py-6 px-8">
-<div class="flex items-center gap-1 text-primary">
-<span class="material-symbols-outlined text-sm">trending_up</span>
-<span class="font-label font-bold text-sm">+1.8%</span>
-</div>
-</td>
-<td class="py-6 px-8">
-<p class="font-headline font-black text-xl text-on-surface">$12,250.00</p>
-</td>
-<td class="py-6 px-8 text-right">
-<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-headline font-bold text-sm hover:brightness-110 transition-all">Buy Now</button>
-</td>
-</tr>
-<!-- Toywiz -->
-<tr class="hover:bg-surface-container-highest transition-colors group">
-<td class="py-6 px-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-secondary">toys</span>
-</div>
-<div>
-<p class="font-headline font-bold text-on-surface">Toywiz</p>
-<p class="text-[10px] text-on-surface-variant font-label">Trusted Vendor</p>
-</div>
-</div>
-</td>
-<td class="py-6 px-8">
-<span class="px-3 py-1 bg-surface-container-highest text-on-surface rounded-full text-xs font-bold border border-outline-variant/20">Lightly Played (LP)</span>
-</td>
-<td class="py-6 px-8">
-<div class="flex items-center gap-1 text-on-surface-variant">
-<span class="material-symbols-outlined text-sm">horizontal_rule</span>
-<span class="font-label font-bold text-sm">0.0%</span>
-</div>
-</td>
-<td class="py-6 px-8">
-<p class="font-headline font-black text-xl text-on-surface">$11,950.00</p>
-</td>
-<td class="py-6 px-8 text-right">
-<button class="bg-surface-container-highest text-on-surface border border-outline-variant/40 px-6 py-2 rounded-full font-headline font-bold text-sm hover:bg-surface-bright transition-all">Visit Store</button>
-</td>
-</tr>
-<!-- CoolStuffInc -->
-<tr class="hover:bg-surface-container-highest transition-colors group">
-<td class="py-6 px-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-tertiary">auto_awesome</span>
-</div>
-<div>
-<p class="font-headline font-bold text-on-surface">CoolStuffInc</p>
-<p class="text-[10px] text-on-surface-variant font-label">Premium Retailer</p>
-</div>
-</div>
-</td>
-<td class="py-6 px-8">
-<span class="px-3 py-1 bg-surface-container-highest text-on-surface rounded-full text-xs font-bold border border-outline-variant/20">Near Mint (NM)</span>
-</td>
-<td class="py-6 px-8">
-<div class="flex items-center gap-1 text-error">
-<span class="material-symbols-outlined text-sm">trending_down</span>
-<span class="font-label font-bold text-sm">-0.5%</span>
-</div>
-</td>
-<td class="py-6 px-8">
-<p class="font-headline font-black text-xl text-on-surface">$12,300.00</p>
-</td>
-<td class="py-6 px-8 text-right">
-<button class="bg-primary-container text-on-primary-container px-6 py-2 rounded-full font-headline font-bold text-sm hover:brightness-110 transition-all">Buy Now</button>
-</td>
-</tr></tbody>
-</table>
-</div>
-</section>
-<!-- Side Intelligence Bento -->
-<section class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-<div class="bg-surface-container-low p-8 rounded-3xl border border-outline-variant/10 relative overflow-hidden group">
-<div class="absolute -right-4 -bottom-4 text-primary opacity-5 transform group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-9xl">analytics</span>
-</div>
-<h4 class="font-headline font-bold text-xl mb-4 text-primary">Vault Analytics</h4>
-<p class="text-on-surface-variant text-sm leading-relaxed mb-6">This card has seen a 230% increase in trading volume over the last 30 days, primarily driven by the upcoming Legend Tournament.</p>
-<div class="flex items-center gap-4">
-<div>
-<p class="text-[10px] font-label text-on-surface-variant uppercase tracking-widest">Hold Confidence</p>
-<p class="font-headline font-bold text-lg">94% Strong</p>
-</div>
-</div>
-</div>
-<div class="bg-surface-container-low p-8 rounded-3xl border border-outline-variant/10 relative overflow-hidden group">
-<div class="absolute -right-4 -bottom-4 text-secondary opacity-5 transform group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-9xl">security</span>
-</div>
-<h4 class="font-headline font-bold text-xl mb-4 text-secondary">Authentication</h4>
-<p class="text-on-surface-variant text-sm leading-relaxed mb-6">Every high-value transaction on Onboard is backed by our multi-layered fraud detection and professional grading verification.</p>
-<button class="text-secondary font-label text-xs uppercase tracking-widest font-bold flex items-center gap-2 hover:underline">
-          View Certifications
-          <span class="material-symbols-outlined text-sm">arrow_forward</span>
-</button>
-</div>
-<div class="bg-surface-container-low p-8 rounded-3xl border border-outline-variant/10 relative overflow-hidden group">
-<div class="absolute -right-4 -bottom-4 text-tertiary opacity-5 transform group-hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-9xl">history</span>
-</div>
-<h4 class="font-headline font-bold text-xl mb-4 text-tertiary">Sale History</h4>
-<div class="space-y-3">
-<div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
-<span class="text-xs text-on-surface-variant">Oct 24, 2023</span>
-<span class="font-headline font-bold text-on-surface">$11,900</span>
-</div>
-<div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
-<span class="text-xs text-on-surface-variant">Sep 12, 2023</span>
-<span class="font-headline font-bold text-on-surface">$10,450</span>
-</div>
-<div class="flex justify-between items-center py-2">
-<span class="text-xs text-on-surface-variant">Aug 05, 2023</span>
-<span class="font-headline font-bold text-on-surface">$10,100</span>
-</div>
-</div>
-</div>
-</section>
-</main>
-<footer class="bg-surface-container-lowest py-12 px-6 border-t border-outline-variant/10">
-<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-<div class="text-xl font-black tracking-tighter text-[#69daff] font-['Space_Grotesk'] opacity-50">
-        Onboard TCG
-      </div>
-<div class="flex gap-8 text-on-surface-variant font-label text-xs tracking-widest uppercase">
-<a class="hover:text-primary transition-colors" href="#">Documentation</a>
-<a class="hover:text-primary transition-colors" href="#">Seller Hub</a>
-<a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
-<a class="hover:text-primary transition-colors" href="#">Privacy</a>
-</div>
-<div class="flex gap-4">
-<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-lg">public</span>
-</div>
-<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center border border-outline-variant/20">
-<span class="material-symbols-outlined text-lg">terminal</span>
-</div>
-</div>
-</div>
-<div class="max-w-7xl mx-auto mt-8 text-center text-on-surface-variant/40 text-[10px] font-label uppercase tracking-[0.2em]">
-      © 2024 Digital Vault Systems. No-Line Protocol Enabled.
+<body id="appBody" class="bg-background text-on-surface font-body selection:bg-[var(--game-color)] selection:text-background theme-ygo">
+
+<header class="bg-[#0c0e11] flex justify-between items-center w-full px-6 py-4 h-20 top-0 z-50 border-b border-[#23262a]/30 shadow-[0_24px_48px_rgba(0,0,0,0.4)] fixed">
+    <div class="flex items-center w-1/4">
+        <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
+            <img alt="Onboard Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uj9tE9aJKEn5prVJMPWSgFkk86I0ROmzEbe9DLWImJa6WmhhTwNiexAOFgaa0qw-nqqXLN0nkYatbrxIlr8Hf_AJ1jP8ty6nkmmKZrbCfcODygZXShyfyNyjEDsqJU1pq484mK5EQn-VH3pukRhsNvEcCsGqvFkeqdzqnqLszir-RaIJGyhQZ8vPB0tMBvjV-9LK9D4wbNOLYsxk5_IUMQkrTobNro4pD_NzWb03P6qX3AcH5Ari1ilEPkn"/>
+            <span class="text-4xl font-bold tracking-tight text-[var(--game-color)] font-headline transition-colors">Onboard</span>
+        </a>
     </div>
-</footer>
-</body></html>
+    <nav class="flex-1 flex justify-center items-center gap-12 font-headline font-medium tracking-[0.1em] text-[13px] uppercase">
+        <a class="text-[#f9f9fd]/50 hover:text-[var(--game-color)] transition-colors whitespace-nowrap" href="onboard_search_results_standardized_header.html">Market</a>
+        <a class="text-[#f9f9fd]/50 hover:text-[var(--game-color)] transition-colors whitespace-nowrap" href="onboard_watchlist_standardized_header.html">Watchlist</a>
+        <a class="text-[#f9f9fd]/50 hover:text-[var(--game-color)] transition-colors whitespace-nowrap" href="onboard_deck_builder_standardized_header.html">Deck Builder</a>
+        <a class="text-[#f9f9fd]/50 hover:text-[var(--game-color)] transition-colors whitespace-nowrap" href="onboard_my_collection_standardized_header.html">Collection</a>
+        <a class="text-[#f9f9fd]/50 hover:text-[var(--game-color)] transition-colors whitespace-nowrap" href="onboard_seller_hub_standardized_header.html">Seller Hub</a>
+    </nav>
+    <div class="flex items-center justify-end gap-4 w-1/4">
+        <div class="flex items-center gap-1">
+            <button class="p-2 hover:bg-[#171a1d] transition-all duration-200 rounded-full relative">
+                <span class="material-symbols-outlined text-[var(--game-color)]">notifications</span>
+            </button>
+            <div class="w-9 h-9 rounded-full bg-surface-container-highest overflow-hidden ml-2 border border-outline-variant/30">
+                <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1oC1axstDPvxy7g1rpa1_R6WaPvmsh6MRPV0VwxQRnTw8Gu3CAPYaQa5-Abo2LOBz6PMcEITb2LwEQSjnTuAAltject8-5saG4CHFctYnNjlfOh3UjZHrafjYddc6TToIgQoMILhFGG9zd3QNBuOR4BZVPGts3XLzOlWLVtH7fCo7ljv7hH8KFncJ3E519BRvYCOyUv6zZEGUBDclxtioynXYzA48ymxdytXG1DU2Vo0e0y7APgrH1gCQ6Zj__67IsWDQn0XRCEnB"/>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="pt-32 pb-20 px-6 max-w-7xl mx-auto min-h-screen" id="mainContent">
+    <div id="loadingState" class="flex flex-col items-center justify-center py-32">
+        <span class="material-symbols-outlined text-6xl animate-spin text-[var(--game-color)] mb-4">refresh</span>
+        <h2 class="font-headline text-2xl text-white">Decrypting Asset Data...</h2>
+        <p class="text-slate-500 mt-2">Connecting to global market nodes</p>
+    </div>
+
+    <div id="cardDetailState" class="hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            <div class="lg:col-span-5 flex flex-col gap-6 sticky top-32">
+                <div class="relative group">
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-[var(--game-color)]/20 to-secondary/20 blur-3xl rounded-full opacity-50"></div>
+                    <div class="relative rounded-3xl overflow-hidden glass-effect p-4 card-glow transition-transform duration-500 hover:scale-[1.02] bg-black">
+                        <img id="detailImage" class="w-full h-auto rounded-2xl shadow-2xl object-cover" src="" alt="Card Image"/>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button class="bg-[var(--game-color)] text-black font-headline font-bold py-4 rounded-full flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all">
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add_circle</span> Add to Deck
+                    </button>
+                    <button class="bg-surface-container-highest border border-outline-variant/30 text-on-surface font-headline font-bold py-4 rounded-full flex items-center justify-center gap-2 hover:bg-surface-container transition-all">
+                        <span class="material-symbols-outlined">favorite</span> Watchlist
+                    </button>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 flex flex-col gap-10">
+                <div>
+                    <div class="flex items-center gap-3 mb-2" id="badgesContainer">
+                        </div>
+                    <h1 id="detailName" class="text-5xl lg:text-6xl font-headline font-extrabold tracking-tighter text-on-surface mb-4">Loading...</h1>
+                    <p id="detailDesc" class="text-on-surface-variant font-body text-lg leading-relaxed max-w-xl bg-surface-container-low/50 p-4 rounded-xl border border-white/5 italic">
+                        ...
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="specGrid">
+                    </div>
+
+                <div class="bg-surface-container-highest rounded-3xl p-8 glass-effect border border-[var(--game-color)]/20 shadow-[0_0_30px_rgba(var(--game-color-rgb),0.1)]">
+                    <div class="flex items-end justify-between mb-6">
+                        <div>
+                            <p class="font-label text-[10px] text-on-surface-variant uppercase tracking-widest mb-1">Base Market Value (TCGPlayer)</p>
+                            <h2 id="basePrice" class="text-5xl font-headline font-black text-on-surface">$0.00</h2>
+                        </div>
+                        <div class="text-right">
+                            <span class="flex items-center gap-1 text-[var(--game-color)] font-headline font-bold text-xl">
+                                <span class="material-symbols-outlined">trending_up</span> LIVE API
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <section class="mt-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-3xl font-headline font-bold tracking-tight">Marketplace Intelligence</h3>
+                        <div class="flex gap-2">
+                            <span class="flex items-center gap-1 text-[11px] font-label text-on-surface-variant">
+                                <span class="w-2 h-2 rounded-full bg-[var(--game-color)] animate-pulse"></span> LIVE SYNC
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-surface-container-low rounded-3xl overflow-hidden border border-outline-variant/10">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-surface-container border-b border-outline-variant/10">
+                                    <th class="py-5 px-6 font-label text-[11px] text-slate-400 uppercase tracking-widest">Vendor</th>
+                                    <th class="py-5 px-6 font-label text-[11px] text-slate-400 uppercase tracking-widest hidden md:table-cell">Region</th>
+                                    <th class="py-5 px-6 font-label text-[11px] text-slate-400 uppercase tracking-widest">Market Price</th>
+                                    <th class="py-5 px-6 text-right font-label text-[11px] text-slate-400 uppercase tracking-widest">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant/5" id="vendorTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // 1. 读取网址参数 (例如: ?game=ygo&id=46986414)
+    const urlParams = new URLSearchParams(window.location.search);
+    const game = urlParams.get('game') || 'ygo'; // 默认游戏王
+    // 如果没有 ID，默认加载黑魔导的 ID 用于演示
+    const cardId = urlParams.get('id') || '46986414'; 
+
+    // 设置主题色
+    document.getElementById('appBody').className = `bg-background text-on-surface font-body selection:bg-[var(--game-color)] selection:text-background theme-${game}`;
+
+    // DOM 元素绑定
+    const loadingState = document.getElementById('loadingState');
+    const cardDetailState = document.getElementById('cardDetailState');
+    const detailImage = document.getElementById('detailImage');
+    const detailName = document.getElementById('detailName');
+    const detailDesc = document.getElementById('detailDesc');
+    const badgesContainer = document.getElementById('badgesContainer');
+    const specGrid = document.getElementById('specGrid');
+    const basePrice = document.getElementById('basePrice');
+    const vendorTableBody = document.getElementById('vendorTableBody');
+
+    // 2. 获取卡牌数据的核心函数
+    async function fetchCardDetails() {
+        try {
+            let cardData = null;
+            let prices = {};
+
+            if (game === 'ygo') {
+                const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?id=${cardId}`);
+                const data = await res.json();
+                const c = data.data[0];
+                
+                cardData = {
+                    name: c.name,
+                    img: c.card_images[0].image_url,
+                    desc: c.desc,
+                    type: c.type,
+                    race: c.race,
+                    attribute: c.attribute || 'N/A',
+                    level: c.level ? `Level ${c.level}` : (c.linkval ? `Link ${c.linkval}` : 'N/A')
+                };
+                
+                // 获取 5 个市场的真实价格
+                const p = c.card_prices[0];
+                prices = [
+                    { vendor: "TCGPlayer", icon: "shopping_cart", region: "North America", price: p.tcgplayer_price, color: "text-primary" },
+                    { vendor: "Cardmarket", icon: "explore", region: "Europe", price: p.cardmarket_price, color: "text-secondary" },
+                    { vendor: "eBay", icon: "gavel", region: "Global Auction", price: p.ebay_price, color: "text-tertiary" },
+                    { vendor: "Amazon", icon: "storefront", region: "Retail Direct", price: p.amazon_price, color: "text-orange-400" },
+                    { vendor: "CoolStuffInc", icon: "auto_awesome", region: "Premium Retail", price: p.coolstuffinc_price, color: "text-emerald-400" }
+                ];
+            } 
+            else if (game === 'pkmn') {
+                const res = await fetch(`https://api.pokemontcg.io/v2/cards/${cardId}`);
+                const data = await res.json();
+                const c = data.data;
+                
+                cardData = {
+                    name: c.name,
+                    img: c.images.large,
+                    desc: c.flavorText || (c.attacks ? c.attacks.map(a => a.name).join(' / ') : c.supertype),
+                    type: c.supertype,
+                    race: c.subtypes ? c.subtypes.join(', ') : 'N/A',
+                    attribute: c.types ? c.types.join(', ') : 'N/A',
+                    level: c.hp ? `HP ${c.hp}` : 'N/A'
+                };
+
+                const baseP = c.tcgplayer?.prices?.holofoil?.market || c.tcgplayer?.prices?.normal?.market || 0;
+                // 模拟 5 个市场价格波动
+                prices = [
+                    { vendor: "TCGPlayer", icon: "shopping_cart", region: "North America", price: baseP, color: "text-primary" },
+                    { vendor: "Cardmarket", icon: "explore", region: "Europe", price: (baseP * 0.9).toFixed(2), color: "text-secondary" },
+                    { vendor: "eBay", icon: "gavel", region: "Global Auction", price: (baseP * 1.1).toFixed(2), color: "text-tertiary" },
+                    { vendor: "Troll & Toad", icon: "storefront", region: "Direct Seller", price: (baseP * 1.05).toFixed(2), color: "text-orange-400" },
+                    { vendor: "CoolStuffInc", icon: "auto_awesome", region: "Premium Retail", price: (baseP * 0.95).toFixed(2), color: "text-emerald-400" }
+                ];
+            }
+            else if (game === 'mtg') {
+                const res = await fetch(`https://api.scryfall.com/cards/${cardId}`);
+                const c = await res.json();
+                
+                cardData = {
+                    name: c.name,
+                    img: c.image_uris ? c.image_uris.normal : (c.card_faces ? c.card_faces[0].image_uris.normal : ''),
+                    desc: c.oracle_text || 'No description available.',
+                    type: c.type_line,
+                    race: c.set_name,
+                    attribute: c.mana_cost || 'Land',
+                    level: c.rarity
+                };
+
+                const baseP = c.prices?.usd || c.prices?.usd_foil || 0;
+                prices = [
+                    { vendor: "TCGPlayer", icon: "shopping_cart", region: "North America", price: baseP, color: "text-primary" },
+                    { vendor: "Cardmarket", icon: "explore", region: "Europe", price: c.prices?.eur || (baseP * 0.9).toFixed(2), color: "text-secondary" },
+                    { vendor: "eBay", icon: "gavel", region: "Global Auction", price: (baseP * 1.1).toFixed(2), color: "text-tertiary" },
+                    { vendor: "MTGO", icon: "computer", region: "Digital Market", price: c.prices?.tix || "0.00", color: "text-blue-400" },
+                    { vendor: "CoolStuffInc", icon: "auto_awesome", region: "Premium Retail", price: (baseP * 0.95).toFixed(2), color: "text-emerald-400" }
+                ];
+            }
+
+            renderDetails(cardData, prices);
+
+        } catch (error) {
+            console.error(error);
+            loadingState.innerHTML = `<span class="material-symbols-outlined text-6xl text-error mb-4">error</span><h2 class="font-headline text-2xl text-error">Asset Decryption Failed</h2><p class="text-slate-500 mt-2">Could not find card ID: ${cardId}</p>`;
+        }
+    }
+
+    // 3. 渲染数据到页面
+    function renderDetails(card, prices) {
+        // 隐藏加载，显示内容
+        loadingState.style.display = 'none';
+        cardDetailState.style.display = 'block';
+
+        // 基础信息
+        detailImage.src = card.img;
+        detailName.innerText = card.name;
+        detailDesc.innerText = card.desc;
+
+        // 标签 (Badges)
+        badgesContainer.innerHTML = `
+            <span class="bg-[var(--game-color)]/20 text-[var(--game-color)] px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-widest font-bold border border-[var(--game-color)]/30">${card.type}</span>
+            <span class="bg-surface-container-highest text-white px-3 py-1 rounded-full font-label text-[10px] uppercase tracking-widest font-bold border border-white/10">${card.race}</span>
+        `;
+
+        // 规格表格 (Specs)
+        specGrid.innerHTML = `
+            <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
+                <p class="font-label text-[10px] text-slate-500 uppercase tracking-widest mb-1">Category</p>
+                <p class="font-headline font-bold text-white truncate" title="${card.type}">${card.type}</p>
+            </div>
+            <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
+                <p class="font-label text-[10px] text-slate-500 uppercase tracking-widest mb-1">Subtype / Race</p>
+                <p class="font-headline font-bold text-white truncate" title="${card.race}">${card.race}</p>
+            </div>
+            <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
+                <p class="font-label text-[10px] text-slate-500 uppercase tracking-widest mb-1">Attribute / Cost</p>
+                <p class="font-headline font-bold text-[var(--game-color)]">${card.attribute}</p>
+            </div>
+            <div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/10">
+                <p class="font-label text-[10px] text-slate-500 uppercase tracking-widest mb-1">Level / HP / Rarity</p>
+                <p class="font-headline font-bold text-white">${card.level}</p>
+            </div>
+        `;
+
+        // 设置主展示价格 (取 TCGPlayer)
+        basePrice.innerText = `$${prices[0].price || '0.00'}`;
+
+        // 渲染 5 个对比市场
+        vendorTableBody.innerHTML = '';
+        prices.forEach(v => {
+            const displayPrice = v.price ? `$${v.price}` : 'Out of Stock';
+            const disableBtn = !v.price || v.price == 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-surface-bright';
+            
+            const row = `
+                <tr class="hover:bg-surface-container-highest transition-colors group">
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center border border-outline-variant/20">
+                                <span class="material-symbols-outlined ${v.color}">${v.icon}</span>
+                            </div>
+                            <div>
+                                <p class="font-headline font-bold text-white">${v.vendor}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6 hidden md:table-cell">
+                        <span class="text-xs text-slate-400 font-label tracking-widest uppercase">${v.region}</span>
+                    </td>
+                    <td class="py-4 px-6">
+                        <p class="font-headline font-black text-xl text-[var(--game-color)]">${displayPrice}</p>
+                    </td>
+                    <td class="py-4 px-6 text-right">
+                        <button class="bg-surface-container text-white border border-outline-variant/40 px-6 py-2 rounded-full font-headline font-bold text-xs transition-all ${disableBtn}">Check Store</button>
+                    </td>
+                </tr>
+            `;
+            vendorTableBody.insertAdjacentHTML('beforeend', row);
+        });
+    }
+
+    // 启动拉取
+    fetchCardDetails();
+
+</script>
+</body>
+</html>
