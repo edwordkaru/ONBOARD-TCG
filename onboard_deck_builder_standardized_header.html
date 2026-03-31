@@ -32,7 +32,7 @@
 <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .card-hover:hover { transform: translateY(-4px) scale(1.05); z-index: 10; cursor: pointer; }
+    .card-hover:hover { transform: translateY(-6px) scale(1.05); z-index: 20; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.8); }
     /* 游戏主题色 */
     .theme-ygo { --game-color: #69daff; --game-bg: rgba(105, 218, 255, 0.1); }
     .theme-pkmn { --game-color: #ffcb05; --game-bg: rgba(255, 203, 5, 0.1); }
@@ -62,7 +62,6 @@
         <div class="flex items-center gap-1">
             <button class="p-2 hover:bg-[#171a1d] transition-all duration-200 rounded-full relative">
                 <span class="material-symbols-outlined text-[#69daff]">notifications</span>
-                <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-[#0c0e11]"></span>
             </button>
             <div class="w-9 h-9 rounded-full bg-surface-variant overflow-hidden ml-2 border border-[#46484b]/30">
                 <img alt="user avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1oC1axstDPvxy7g1rpa1_R6WaPvmsh6MRPV0VwxQRnTw8Gu3CAPYaQa5-Abo2LOBz6PMcEITb2LwEQSjnTuAAltject8-5saG4CHFctYnNjlfOh3UjZHrafjYddc6TToIgQoMILhFGG9zd3QNBuOR4BZVPGts3XLzOlWLVtH7fCo7ljv7hH8KFncJ3E519BRvYCOyUv6zZEGUBDclxtioynXYzA48ymxdytXG1DU2Vo0e0y7APgrH1gCQ6Zj__67IsWDQn0XRCEnB"/>
@@ -72,46 +71,46 @@
 </header>
 
 <main class="flex h-screen pt-20 flex-col">
-    <div class="w-full bg-surface-container-lowest border-b border-surface-variant flex justify-center py-2 gap-4">
-        <button onclick="switchGame('ygo')" id="tab-ygo" class="px-6 py-2 rounded-full font-headline font-bold text-sm bg-[var(--game-bg)] border border-[var(--game-color)] text-[var(--game-color)] transition-all">Yu-Gi-Oh!</button>
-        <button onclick="switchGame('pkmn')" id="tab-pkmn" class="px-6 py-2 rounded-full font-headline font-bold text-sm text-slate-500 hover:text-white transition-all border border-transparent">Pokémon</button>
-        <button onclick="switchGame('mtg')" id="tab-mtg" class="px-6 py-2 rounded-full font-headline font-bold text-sm text-slate-500 hover:text-white transition-all border border-transparent">Magic: The Gathering</button>
+    <div class="w-full bg-surface-container-lowest border-b border-surface-variant flex justify-center py-3 gap-6 shadow-md z-10 relative">
+        <button onclick="switchGame('ygo')" id="tab-ygo" class="px-8 py-2 rounded-full font-headline font-bold text-sm transition-all">Yu-Gi-Oh!</button>
+        <button onclick="switchGame('pkmn')" id="tab-pkmn" class="px-8 py-2 rounded-full font-headline font-bold text-sm transition-all">Pokémon</button>
+        <button onclick="switchGame('mtg')" id="tab-mtg" class="px-8 py-2 rounded-full font-headline font-bold text-sm transition-all">Magic: The Gathering</button>
     </div>
 
     <div class="flex flex-1 overflow-hidden">
-        <div class="flex-1 border-r border-surface-variant/50 p-6 overflow-y-auto no-scrollbar flex flex-col gap-6 bg-surface-container-low/30">
-            <div class="flex justify-between items-end mb-2">
+        <div class="flex-1 border-r border-surface-variant/50 p-6 overflow-y-auto no-scrollbar flex flex-col bg-surface-container-low/30 relative">
+            <div class="flex justify-between items-end mb-6">
                 <div>
                     <h1 class="text-3xl font-black font-headline tracking-tight text-[var(--game-color)]">Current Deck</h1>
                     <p class="text-xs font-label uppercase tracking-widest mt-1 text-[var(--game-color)]" id="systemMessage">System Ready.</p>
                 </div>
                 <div class="flex gap-4">
                     <button onclick="clearDeck()" class="px-4 py-2 border border-error/50 text-error hover:bg-error/10 rounded-lg text-xs font-bold transition-all">Clear All</button>
-                    <button class="px-6 py-2 bg-[var(--game-color)] text-[#0c0e11] rounded-lg text-xs font-bold hover:brightness-110 shadow-[0_0_15px_var(--game-bg)] transition-all">Save Deck</button>
+                    <button class="px-6 py-2 bg-[var(--game-color)] text-[#0c0e11] rounded-lg text-xs font-bold hover:brightness-110 transition-all">Save Deck</button>
                 </div>
             </div>
 
-            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 min-h-[300px]">
-                <div class="flex justify-between items-center border-b border-surface-variant pb-2 mb-4">
-                    <h2 class="font-headline font-bold text-lg">Main Deck</h2>
-                    <span id="mainDeckCount" class="font-label text-xs font-black bg-surface-variant px-2 py-1 rounded text-[var(--game-color)]">0 / 60</span>
+            <div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-5 mb-8 shadow-lg">
+                <div class="flex justify-between items-center border-b border-surface-variant pb-3 mb-5">
+                    <h2 class="font-headline font-bold text-xl text-white">Main Deck</h2>
+                    <span id="mainDeckCount" class="font-label text-xs font-black bg-surface-variant px-3 py-1 rounded text-[var(--game-color)]">0 / 60</span>
                 </div>
-                <div id="mainDeckGrid" class="flex flex-col gap-4"></div>
+                <div id="mainDeckGrid" class="flex flex-col gap-6"></div>
             </div>
 
-            <div id="extraDeckContainer" class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 min-h-[150px]">
-                <div class="flex justify-between items-center border-b border-surface-variant pb-2 mb-4">
-                    <h2 id="extraDeckTitle" class="font-headline font-bold text-lg text-purple-400">Extra Deck</h2>
-                    <span id="extraDeckCount" class="font-label text-xs font-black bg-surface-variant px-2 py-1 rounded text-purple-400">0 / 15</span>
+            <div id="extraDeckContainer" class="bg-[#110e17] border border-purple-500/40 rounded-xl p-5 shadow-[0_0_30px_rgba(172,137,255,0.05)]">
+                <div class="flex justify-between items-center border-b border-purple-500/20 pb-3 mb-5">
+                    <h2 id="extraDeckTitle" class="font-headline font-bold text-xl text-purple-400">Extra Deck</h2>
+                    <span id="extraDeckCount" class="font-label text-xs font-black bg-purple-500/20 px-3 py-1 rounded text-purple-400">0 / 15</span>
                 </div>
-                <div id="extraDeckGrid" class="flex flex-col gap-4"></div>
+                <div id="extraDeckGrid" class="flex flex-col gap-6"></div>
             </div>
         </div>
 
-        <div class="w-96 bg-surface-container-highest border-l border-surface-variant/50 flex flex-col h-full relative z-10 shadow-2xl">
+        <div class="w-[400px] bg-surface-container-highest border-l border-surface-variant/50 flex flex-col h-full relative z-10 shadow-2xl">
             <div class="p-6 border-b border-surface-variant/50 bg-[#0c0e11]">
-                <h3 class="font-headline font-bold text-[var(--game-color)] mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-sm">database</span> Card Database
+                <h3 class="font-headline font-bold text-[var(--game-color)] mb-4 flex items-center gap-2 text-lg">
+                    <span class="material-symbols-outlined">database</span> Card Database
                 </h3>
                 <div class="relative">
                     <input id="builderSearchInput" type="text" placeholder="Search card to add (Enter)..." class="w-full bg-[#171a1d] border border-surface-variant rounded-lg pl-10 pr-4 py-3 text-sm focus:ring-1 focus:ring-[var(--game-color)] transition-all">
@@ -120,47 +119,18 @@
             </div>
 
             <div id="builderSearchResults" class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar pb-24">
-                <p class="text-center text-xs text-on-surface/40 mt-10">Search for a card to begin building.</p>
+                <p class="text-center text-xs text-on-surface/40 mt-10 font-label tracking-widest uppercase">Search for a card to begin</p>
             </div>
         </div>
     </div>
 </main>
 
 <script>
-    // ---------------------------------------------------
-    // 1. 数据结构与状态管理
-    // ---------------------------------------------------
+    // --- 1. 核心数据与规则 ---
     const gameRules = {
-        ygo: {
-            name: "Yu-Gi-Oh!",
-            color: "#69daff",
-            maxCopies: 3,
-            mainMin: 40,
-            mainMax: 60,
-            hasExtra: true,
-            extraName: "Extra Deck",
-            extraMax: 15
-        },
-        pkmn: {
-            name: "Pokémon",
-            color: "#ffcb05",
-            maxCopies: 4,
-            mainMin: 60,
-            mainMax: 60,
-            hasExtra: false,
-            extraName: "",
-            extraMax: 0
-        },
-        mtg: {
-            name: "Magic: The Gathering",
-            color: "#ff7a00",
-            maxCopies: 4,
-            mainMin: 60,
-            mainMax: 100, 
-            hasExtra: true,
-            extraName: "Sideboard",
-            extraMax: 15
-        }
+        ygo: { name: "Yu-Gi-Oh!", color: "#69daff", maxCopies: 3, mainMin: 40, mainMax: 60, hasExtra: true, extraName: "Extra Deck", extraMax: 15 },
+        pkmn: { name: "Pokémon", color: "#ffcb05", maxCopies: 4, mainMin: 60, mainMax: 60, hasExtra: false, extraName: "", extraMax: 0 },
+        mtg: { name: "Magic: The Gathering", color: "#ff7a00", maxCopies: 4, mainMin: 60, mainMax: 100, hasExtra: true, extraName: "Sideboard", extraMax: 15 }
     };
 
     let activeGame = 'ygo';
@@ -170,16 +140,7 @@
         mtg: { main: [], extra: [] }
     };
 
-    const appBody = document.getElementById('appBody');
-    const searchInput = document.getElementById('builderSearchInput');
-    const searchResults = document.getElementById('builderSearchResults');
-    const systemMessage = document.getElementById('systemMessage');
-    const extraDeckContainer = document.getElementById('extraDeckContainer');
-    const extraDeckTitle = document.getElementById('extraDeckTitle');
-    
-    // ---------------------------------------------------
-    // 智能分类识别函数
-    // ---------------------------------------------------
+    // --- 2. 智能分类系统 ---
     function getCardCategory(game, typeLine) {
         if (!typeLine) return 'Other';
         const t = typeLine.toLowerCase();
@@ -207,59 +168,52 @@
         return 'Cards';
     }
 
-    // ---------------------------------------------------
-    // 2. 游戏环境切换逻辑
-    // ---------------------------------------------------
+    // --- 3. UI 切换与状态 ---
     function switchGame(gameId) {
         activeGame = gameId;
-        appBody.className = `bg-background text-on-surface font-body selection:bg-primary selection:text-[#004a5d] overflow-hidden theme-${gameId}`;
+        document.getElementById('appBody').className = `bg-background text-on-surface font-body selection:bg-primary selection:text-[#004a5d] overflow-hidden theme-${gameId}`;
         
         ['ygo', 'pkmn', 'mtg'].forEach(id => {
             const tab = document.getElementById(`tab-${id}`);
             if (id === gameId) {
-                tab.className = `px-6 py-2 rounded-full font-headline font-bold text-sm bg-[var(--game-bg)] border border-[var(--game-color)] text-[var(--game-color)] transition-all`;
+                tab.className = `px-8 py-2 rounded-full font-headline font-bold text-sm bg-[var(--game-bg)] border border-[var(--game-color)] text-[var(--game-color)] transition-all`;
             } else {
-                tab.className = `px-6 py-2 rounded-full font-headline font-bold text-sm text-slate-500 hover:text-white transition-all border border-transparent`;
+                tab.className = `px-8 py-2 rounded-full font-headline font-bold text-sm text-slate-500 hover:text-white transition-all border border-transparent`;
             }
         });
 
         const rules = gameRules[gameId];
+        const extraContainer = document.getElementById('extraDeckContainer');
         if (rules.hasExtra) {
-            extraDeckContainer.style.display = 'block';
-            extraDeckTitle.innerText = rules.extraName;
+            extraContainer.style.display = 'block';
+            document.getElementById('extraDeckTitle').innerText = rules.extraName;
         } else {
-            extraDeckContainer.style.display = 'none';
+            extraContainer.style.display = 'none';
         }
 
-        searchInput.value = '';
-        searchResults.innerHTML = '<p class="text-center text-xs text-on-surface/40 mt-10">Search for a card in ' + rules.name + '</p>';
-        showMessage(`${rules.name} format selected.`);
+        document.getElementById('builderSearchInput').value = '';
+        document.getElementById('builderSearchResults').innerHTML = `<p class="text-center text-xs text-on-surface/40 mt-10 font-label tracking-widest uppercase">Search ${rules.name}</p>`;
+        showMessage(`${rules.name} format loaded.`);
         renderDeck();
     }
 
-    // ---------------------------------------------------
-    // 3. 搜索与 API 调用
-    // ---------------------------------------------------
-    searchInput.addEventListener('keypress', async function (e) {
+    // --- 4. 搜索与添加 ---
+    document.getElementById('builderSearchInput').addEventListener('keypress', async function (e) {
         if (e.key === 'Enter') {
-            const query = searchInput.value.trim();
+            const query = this.value.trim();
             if (!query) return;
 
-            searchResults.innerHTML = '<p class="text-center text-xs mt-10 animate-pulse text-[var(--game-color)]">Fetching from ' + activeGame.toUpperCase() + ' database...</p>';
+            const resultsContainer = document.getElementById('builderSearchResults');
+            resultsContainer.innerHTML = '<p class="text-center text-xs mt-10 animate-pulse text-[var(--game-color)]">Hooking API Database...</p>';
 
             try {
                 let cardsToDisplay = [];
-
                 if (activeGame === 'ygo') {
                     const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(query)}`);
                     const data = await res.json();
                     if(!data.error) {
                         cardsToDisplay = data.data.slice(0, 20).map(c => ({
-                            id: c.id,
-                            name: c.name,
-                            img: c.card_images[0].image_url_small,
-                            type: c.type, 
-                            desc: c.race
+                            id: c.id, name: c.name, img: c.card_images[0].image_url_small, type: c.type, desc: c.race
                         }));
                     }
                 } 
@@ -268,11 +222,7 @@
                     const data = await res.json();
                     if(data.data && data.data.length > 0) {
                         cardsToDisplay = data.data.slice(0, 20).map(c => ({
-                            id: c.id,
-                            name: c.name,
-                            img: c.images.small,
-                            type: c.supertype, 
-                            desc: c.subtypes ? c.subtypes.join(', ') : ''
+                            id: c.id, name: c.name, img: c.images.small, type: c.supertype, desc: c.subtypes ? c.subtypes.join(', ') : ''
                         }));
                     }
                 }
@@ -281,36 +231,26 @@
                     const data = await res.json();
                     if(data.data && data.data.length > 0) {
                         cardsToDisplay = data.data.slice(0, 20).map(c => ({
-                            id: c.id,
-                            name: c.name,
-                            img: c.image_uris ? c.image_uris.small : (c.card_faces ? c.card_faces[0].image_uris.small : ''),
-                            type: c.type_line, 
-                            desc: c.set_name
+                            id: c.id, name: c.name, img: c.image_uris ? c.image_uris.small : (c.card_faces ? c.card_faces[0].image_uris.small : ''), type: c.type_line, desc: c.set_name
                         })).filter(c => c.img !== ''); 
                     }
                 }
 
-                if (cardsToDisplay.length === 0) {
-                    searchResults.innerHTML = '<p class="text-center text-xs text-error mt-10">Card not found in this game.</p>';
-                    return;
-                }
-
-                searchResults.innerHTML = '';
+                if (cardsToDisplay.length === 0) throw new Error("No cards");
+                resultsContainer.innerHTML = '';
                 
                 cardsToDisplay.forEach(card => {
-                    const cardRow = document.createElement('div');
-                    cardRow.className = "flex gap-3 bg-[#111417] p-2 rounded-lg border border-transparent hover:border-[var(--game-color)] cursor-pointer transition-all hover:bg-[#171a1d]";
-                    
-                    cardRow.innerHTML = `
-                        <img src="${card.img}" alt="${card.name}" class="w-12 rounded shadow-md object-cover">
+                    const row = document.createElement('div');
+                    row.className = "flex gap-3 bg-[#111417] p-2 rounded-lg border border-transparent hover:border-[var(--game-color)] cursor-pointer transition-all hover:bg-[#171a1d]";
+                    row.innerHTML = `
+                        <img src="${card.img}" class="w-12 rounded shadow-md object-cover">
                         <div class="flex-1 py-1 flex flex-col justify-between overflow-hidden">
                             <h4 class="font-headline font-bold text-sm text-white truncate">${card.name}</h4>
                             <p class="font-label text-[10px] text-slate-400 truncate">${card.type}</p>
                         </div>
                         <div class="flex flex-col justify-center pr-2 gap-2 action-container"></div>
                     `;
-
-                    const actionContainer = cardRow.querySelector('.action-container');
+                    const actionContainer = row.querySelector('.action-container');
                     
                     const mainBtn = document.createElement('span');
                     mainBtn.className = "material-symbols-outlined text-[var(--game-color)] hover:scale-125 transition-transform";
@@ -327,46 +267,38 @@
                         extraBtn.onclick = (e) => addCard(e, card, true);
                         actionContainer.appendChild(extraBtn);
                     }
-
-                    searchResults.appendChild(cardRow);
+                    resultsContainer.appendChild(row);
                 });
-
             } catch (err) {
-                searchResults.innerHTML = '<p class="text-center text-xs text-error mt-10">API Error / Timeout.</p>';
+                resultsContainer.innerHTML = '<p class="text-center text-xs text-error mt-10">No results found.</p>';
             }
         }
     });
 
-    // ---------------------------------------------------
-    // 4. 卡牌规则检验与添加
-    // ---------------------------------------------------
+    // --- 5. 添加逻辑与严格查错 ---
     function showMessage(msg, isError = false) {
-        systemMessage.innerText = msg;
-        systemMessage.className = `text-xs font-label uppercase tracking-widest mt-1 ${isError ? 'text-error animate-pulse' : 'text-[var(--game-color)]'}`;
-        setTimeout(() => {
-            systemMessage.innerText = "System Ready.";
-            systemMessage.className = "text-xs font-label uppercase tracking-widest mt-1 text-[var(--game-color)] opacity-70";
-        }, 3000);
+        const sm = document.getElementById('systemMessage');
+        sm.innerText = msg;
+        sm.className = `text-xs font-label uppercase tracking-widest mt-1 ${isError ? 'text-error animate-pulse' : 'text-[var(--game-color)]'}`;
+        setTimeout(() => { sm.innerText = "System Ready."; sm.className = "text-xs font-label uppercase tracking-widest mt-1 text-[var(--game-color)] opacity-70"; }, 3000);
     }
 
     function isCardUnlimited(card) {
-        if (activeGame === 'pkmn') {
-            return card.type === 'Energy' && card.desc.includes('Basic');
-        } else if (activeGame === 'mtg') {
-            return card.type.includes('Basic Land');
-        }
+        if (activeGame === 'pkmn') return card.type === 'Energy' && card.desc.includes('Basic');
+        if (activeGame === 'mtg') return card.type.includes('Basic Land');
         return false;
     }
 
     function addCard(event, card, forceExtra) {
         event.stopPropagation(); 
-        
         const rules = gameRules[activeGame];
         const currentDeck = decks[activeGame];
         
         let isExtra = forceExtra;
+        // 修复忽略大小写的融合/同调/超量自动分流逻辑
         if (activeGame === 'ygo' && !forceExtra) {
-            if (card.type.includes('Fusion') || card.type.includes('Synchro') || card.type.includes('XYZ') || card.type.includes('Link')) {
+            const tLine = card.type.toLowerCase();
+            if (tLine.includes('fusion') || tLine.includes('synchro') || tLine.includes('xyz') || tLine.includes('link')) {
                 isExtra = true;
             }
         }
@@ -383,20 +315,13 @@
         }
 
         if (isExtra) {
-            if (targetArray.length >= rules.extraMax) {
-                showMessage(`Rule Violation: ${rules.extraName} limit reached (${rules.extraMax}).`, true);
-                return;
-            }
+            if (targetArray.length >= rules.extraMax) return showMessage(`${rules.extraName} Full!`, true);
         } else {
-            if (targetArray.length >= rules.mainMax) {
-                showMessage(`Rule Violation: Main Deck limit reached (${rules.mainMax}).`, true);
-                return;
-            }
+            if (targetArray.length >= rules.mainMax) return showMessage(`Main Deck Full!`, true);
         }
 
         targetArray.push(card);
         targetArray.sort((a, b) => a.name.localeCompare(b.name));
-        
         showMessage(`Added ${card.name}.`);
         renderDeck();
     }
@@ -409,18 +334,14 @@
 
     function clearDeck() {
         if(confirm(`Clear the entire ${gameRules[activeGame].name} deck?`)) {
-            decks[activeGame].main = [];
-            decks[activeGame].extra = [];
+            decks[activeGame].main = []; decks[activeGame].extra = [];
             renderDeck();
         }
     }
 
-    // ---------------------------------------------------
-    // 5. 分类渲染 UI (✅ 完美修复 Grid 高度塌陷)
-    // ---------------------------------------------------
+    // --- 6. 完美网格渲染 ---
     function renderDeckGroup(deckArray, containerElement, isExtra) {
         containerElement.innerHTML = '';
-        
         if (deckArray.length === 0) return;
 
         const grouped = {};
@@ -432,33 +353,33 @@
 
         for (const [category, items] of Object.entries(grouped)) {
             const groupDiv = document.createElement('div');
-            groupDiv.className = "w-full mb-6"; // ✅ 增加底部间距
+            groupDiv.className = "w-full mb-6"; 
             
             groupDiv.innerHTML = `
                 <div class="flex justify-between items-end border-b border-surface-variant/50 pb-2 mb-4">
-                    <h3 class="text-xs font-bold uppercase tracking-widest text-slate-400">${category}</h3>
-                    <span class="text-[10px] font-label text-slate-400 bg-surface-variant/50 px-2 py-0.5 rounded">${items.length}</span>
+                    <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300">${category}</h3>
+                    <span class="text-[10px] font-label text-slate-400 bg-surface-container-highest px-2 py-0.5 rounded-full">${items.length}</span>
                 </div>
-                <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-3 pb-2"></div>
+                <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-3 pb-2"></div>
             `;
             
             const gridEl = groupDiv.querySelector('.grid');
             
             items.forEach(item => {
-                // ✅ 修复核心：给 img 包一层具有确切物理比例的 div 容器
-                const cardWrapper = document.createElement('div');
-                cardWrapper.className = "w-full aspect-[3/4] rounded shadow-md card-hover border border-transparent hover:border-error/80 transition-all overflow-hidden relative bg-surface-container-lowest cursor-pointer";
-                cardWrapper.title = `${item.card.name} (Click to remove)`;
-                cardWrapper.onclick = () => removeCard(item.index, isExtra);
+                const wrapper = document.createElement('div');
+                // 抛弃动态 Padding，使用最稳定、最原生的内联 aspect-ratio 
+                wrapper.className = "w-full rounded shadow-md card-hover border border-transparent hover:border-error/80 transition-all overflow-hidden bg-surface-container-lowest cursor-pointer";
+                wrapper.style = "aspect-ratio: 3/4;";
+                wrapper.title = `${item.card.name} (Click to remove)`;
+                wrapper.onclick = () => removeCard(item.index, isExtra);
 
                 const img = document.createElement('img');
                 img.src = item.card.img;
-                img.className = "w-full h-full object-cover"; // 填满物理容器
+                img.className = "w-full h-full object-cover"; 
                 
-                cardWrapper.appendChild(img);
-                gridEl.appendChild(cardWrapper);
+                wrapper.appendChild(img);
+                gridEl.appendChild(wrapper);
             });
-            
             containerElement.appendChild(groupDiv);
         }
     }
@@ -467,26 +388,17 @@
         const rules = gameRules[activeGame];
         const currentDeck = decks[activeGame];
         
-        const mainCountEl = document.getElementById('mainDeckCount');
-        const extraCountEl = document.getElementById('extraDeckCount');
-        const mainGrid = document.getElementById('mainDeckGrid');
-        const extraGrid = document.getElementById('extraDeckGrid');
+        const mainCount = document.getElementById('mainDeckCount');
+        mainCount.innerText = `${currentDeck.main.length} / ${rules.mainMax}`;
+        mainCount.className = `font-label text-xs font-black px-3 py-1 rounded-full ${currentDeck.main.length < rules.mainMin ? 'bg-error/20 text-error' : 'bg-[var(--game-bg)] text-[var(--game-color)]'}`;
 
-        mainCountEl.innerText = `${currentDeck.main.length} / ${rules.mainMax}`;
-        if (currentDeck.main.length < rules.mainMin) {
-            mainCountEl.className = `font-label text-xs font-black px-2 py-1 rounded bg-error/20 text-error`;
-        } else {
-            mainCountEl.className = `font-label text-xs font-black px-2 py-1 rounded bg-[var(--game-bg)] text-[var(--game-color)]`;
-        }
+        document.getElementById('extraDeckCount').innerText = `${currentDeck.extra.length} / ${rules.extraMax}`;
 
-        extraCountEl.innerText = `${currentDeck.extra.length} / ${rules.extraMax}`;
-
-        renderDeckGroup(currentDeck.main, mainGrid, false);
-        renderDeckGroup(currentDeck.extra, extraGrid, true);
+        renderDeckGroup(currentDeck.main, document.getElementById('mainDeckGrid'), false);
+        renderDeckGroup(currentDeck.extra, document.getElementById('extraDeckGrid'), true);
     }
 
-    // 初始化
-    renderDeck();
+    switchGame('ygo'); // Boot up YGO by default
 </script>
 </body>
 </html>
