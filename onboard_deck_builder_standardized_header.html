@@ -178,7 +178,7 @@
     const extraDeckTitle = document.getElementById('extraDeckTitle');
     
     // ---------------------------------------------------
-    // 智能分类识别函数 (核心改动)
+    // 智能分类识别函数
     // ---------------------------------------------------
     function getCardCategory(game, typeLine) {
         if (!typeLine) return 'Other';
@@ -238,7 +238,7 @@
     }
 
     // ---------------------------------------------------
-    // 3. 搜索与 API 调用
+    // 3. 搜索与 API 调用 (完全修复点击失效的 BUG)
     // ---------------------------------------------------
     searchInput.addEventListener('keypress', async function (e) {
         if (e.key === 'Enter') {
@@ -297,20 +297,39 @@
 
                 searchResults.innerHTML = '';
                 
+                // 【修复核心】：使用 DOM 操作直接绑定事件，避免 JSON 字符串在 HTML 里引号冲突
                 cardsToDisplay.forEach(card => {
                     const cardRow = document.createElement('div');
                     cardRow.className = "flex gap-3 bg-[#111417] p-2 rounded-lg border border-transparent hover:border-[var(--game-color)] cursor-pointer transition-all hover:bg-[#171a1d]";
+                    
                     cardRow.innerHTML = `
                         <img src="${card.img}" alt="${card.name}" class="w-12 rounded shadow-md object-cover">
                         <div class="flex-1 py-1 flex flex-col justify-between overflow-hidden">
                             <h4 class="font-headline font-bold text-sm text-white truncate">${card.name}</h4>
                             <p class="font-label text-[10px] text-slate-400 truncate">${card.type}</p>
                         </div>
-                        <div class="flex flex-col justify-center pr-2 gap-2">
-                            <span class="material-symbols-outlined text-[var(--game-color)] hover:scale-125 transition-transform" title="Add to Main Deck" onclick="addCard(event, ${JSON.stringify(card).replace(/"/g, '"')}, false)">add_circle</span>
-                            ${gameRules[activeGame].hasExtra ? `<span class="material-symbols-outlined text-purple-400 hover:scale-125 transition-transform text-xs" title="Add to ${gameRules[activeGame].extraName}" onclick="addCard(event, ${JSON.stringify(card).replace(/"/g, '"')}, true)">library_add</span>` : ''}
-                        </div>
+                        <div class="flex flex-col justify-center pr-2 gap-2 action-container"></div>
                     `;
+
+                    // 动态创建按钮并绑定真正的 JS 对象 (不再需要 JSON 转换)
+                    const actionContainer = cardRow.querySelector('.action-container');
+                    
+                    const mainBtn = document.createElement('span');
+                    mainBtn.className = "material-symbols-outlined text-[var(--game-color)] hover:scale-125 transition-transform";
+                    mainBtn.innerText = "add_circle";
+                    mainBtn.title = "Add to Main Deck";
+                    mainBtn.onclick = (e) => addCard(e, card, false);
+                    actionContainer.appendChild(mainBtn);
+
+                    if (gameRules[activeGame].hasExtra) {
+                        const extraBtn = document.createElement('span');
+                        extraBtn.className = "material-symbols-outlined text-purple-400 hover:scale-125 transition-transform text-xs";
+                        extraBtn.innerText = "library_add";
+                        extraBtn.title = `Add to ${gameRules[activeGame].extraName}`;
+                        extraBtn.onclick = (e) => addCard(e, card, true);
+                        actionContainer.appendChild(extraBtn);
+                    }
+
                     searchResults.appendChild(cardRow);
                 });
 
@@ -378,6 +397,7 @@
         }
 
         targetArray.push(card);
+        // 按名字排序，让同样的卡连在一起
         targetArray.sort((a, b) => a.name.localeCompare(b.name));
         
         showMessage(`Added ${card.name}.`);
@@ -399,7 +419,7 @@
     }
 
     // ---------------------------------------------------
-    // 5. 分类渲染 UI (核心改动)
+    // 5. 分类渲染 UI 
     // ---------------------------------------------------
     function renderDeckGroup(deckArray, containerElement, isExtra) {
         containerElement.innerHTML = '';
