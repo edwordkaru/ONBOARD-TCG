@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-
 <html class="dark" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Onboard - Market Search</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Manrope:wght@300;400;500;600;700;800&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -90,9 +89,7 @@
     </style>
 </head>
 <body class="bg-background text-on-surface font-body selection:bg-primary selection:text-on-primary">
-<!-- TopNavBar Standardized to Match Screen 174 -->
 <header class="bg-[#0c0e11] dark:bg-[#0c0e11] flex justify-between items-center w-full px-6 py-4 h-20 docked full-width top-0 z-50 border-b border-[#23262a]/30 shadow-[0_24px_48px_rgba(0,0,0,0.4)] fixed">
-<!-- Brand Logo and Name -->
 <div class="flex items-center w-1/4">
 <a href="index.html" class="flex items-center gap-3 group cursor-pointer">
 <img alt="Onboard Logo" class="h-10 w-10 object-contain" src="https://lh3.googleusercontent.com/aida/ADBb0uj9tE9aJKEn5prVJMPWSgFkk86I0ROmzEbe9DLWImJa6WmhhTwNiexAOFgaa0qw-nqqXLN0nkYatbrxIlr8Hf_AJ1jP8ty6nkmmKZrbCfcODygZXShyfyNyjEDsqJU1pq484mK5EQn-VH3pukRhsNvEcCsGqvFkeqdzqnqLszir-RaIJGyhQZ8vPB0tMBvjV-9LK9D4wbNOLYsxk5_IUMQkrTobNro4pD_NzWb03P6qX3AcH5Ari1ilEPkn"/>
@@ -126,13 +123,10 @@
 </div>
 </div>
 </header>
-<!-- Layout Container -->
 <div class="flex pt-20 min-h-screen">
-<!-- SideNavBar (Filter Panel) -->
 <aside class="fixed left-0 top-0 h-full w-64 bg-slate-950 flex flex-col z-40 shadow-[24px_0_48px_rgba(0,0,0,0.4)] pt-24 overflow-y-auto">
 <div class="px-6 mb-8">
 <h3 class="font-headline font-black text-cyan-400 uppercase text-xs tracking-widest mb-4">Advanced Filters</h3>
-<!-- Game Universe -->
 <div class="mb-6">
 <label class="font-label uppercase text-[10px] text-slate-500 tracking-wider mb-3 block">Game Universe</label>
 <div class="space-y-2">
@@ -150,7 +144,6 @@
                     </button>
 </div>
 </div>
-<!-- Region -->
 <div class="mb-6">
 <label class="font-label uppercase text-[10px] text-slate-500 tracking-wider mb-3 block">Language / Region</label>
 <div class="grid grid-cols-2 gap-2">
@@ -158,11 +151,9 @@
 <button class="bg-surface-container-low border border-outline-variant/10 text-slate-400 py-2 rounded-lg text-xs hover:bg-surface-container-high">Japanese (JP)</button>
 </div>
 </div>
-<!-- Rarity Filter - Dynamically shown for selected Game (Yu-Gi-Oh active) -->
 <div class="mb-6">
 <label class="font-label uppercase text-[10px] text-slate-500 tracking-wider mb-3 block">Rarity Tier</label>
 <div class="space-y-1">
-<!-- Yu-Gi-Oh Rarities -->
 <label class="flex items-center gap-3 p-2 hover:bg-slate-900/50 rounded-lg cursor-pointer group">
 <input class="rounded bg-slate-800 border-none text-primary focus:ring-primary" type="checkbox"/>
 <span class="text-xs text-slate-300 group-hover:text-white transition-colors">Common</span>
@@ -190,7 +181,6 @@
 </div>
 </div>
 </div>
-<!-- Footer Sidebar -->
 <div class="mt-auto px-6 py-8 border-t border-slate-900">
 <button class="w-full bg-primary text-on-primary py-3 rounded-full font-bold text-xs uppercase tracking-widest hover:brightness-110 transition-all mb-6">
                 Upgrade to Pro
@@ -201,32 +191,175 @@
 </div>
 </div>
 </aside>
-<!-- Main Content Canvas -->
 <main class="ml-64 flex-1 px-8 py-10 max-w-7xl">
-<!-- Header Section -->
 <header class="mb-12 flex justify-between items-end">
 <div>
 <div class="flex items-center gap-3 mb-2">
-<span class="font-label uppercase text-[10px] text-primary tracking-widest bg-primary/10 px-2 py-1 rounded">2,841 Results</span>
-<span class="text-slate-500 text-xs font-label uppercase tracking-widest">Searching "Starlight Rare" in Market</span>
+<span class="font-label uppercase text-[10px] text-primary tracking-widest bg-primary/10 px-2 py-1 rounded">LIVE API</span>
+<span class="text-slate-500 text-xs font-label uppercase tracking-widest">Global Market Index</span>
 </div>
 <h1 class="font-headline text-5xl font-black text-on-surface tracking-tighter">Market Discovery</h1>
 </div>
 <div class="flex gap-4">
 <button class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full text-xs font-bold text-slate-300 border border-outline-variant/10">
-                    Sort by: Highest Price
+                    Sort by: Relevance
                     <span class="material-symbols-outlined text-sm">expand_more</span>
 </button>
 </div>
 </header>
-<!-- Card Grid -->
 <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-    ```
+<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(105,218,255,0.3)] border border-transparent hover:border-primary/20">
+<div class="aspect-[3/4] overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Detailed close-up of a rare holographic trading card with iridescent foil reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA22b4Tl-xgRJGktxnufi52_kdgVrENcP2fsRa28874hbJ4wJ-TkzLMmumtLaC9FZbshtYXtDdbPWRE-Tsc4rqBDgR9ifoGa0PIjl-o6VtNzyWDgWMuUwlWYscOL9owAM_snNSKU6Tt1jTr_67qctryAET7EYl8RSQI1ehSQ-W48fDtC6eVTpTVzrpxcmjBP9Y09Z4Ls-u7lzPREjqGwKvJbFuqvR4acV6jh82YEnTKJWzudxuW00ObOkGg9A8ZOo1Q1rCi-QmycnNZ"/>
+<div class="absolute top-3 left-3 flex gap-2">
+<span class="bg-primary/90 text-on-primary-fixed font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">EN</span>
+<span class="bg-secondary/90 text-white font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">MINT 10</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label text-[10px] text-cyan-400 uppercase tracking-widest mb-1">Starlight Rare</p>
+<h4 class="font-headline text-lg font-bold text-white leading-tight">Blue-Eyes White Dragon</h4>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
+<p class="font-headline text-xl font-black text-on-surface">$14,250.00</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-primary uppercase font-label tracking-widest">+12.4%</p>
+<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
+<div class="h-full bg-primary w-3/4"></div>
+</div>
+</div>
+</div>
+<a href="onboard_card_detail_standardized_header.html" class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all block text-center">
+                        View Details
+                    </a>
+</div>
+</div>
+<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(105,218,255,0.3)] border border-transparent hover:border-primary/20">
+<div class="aspect-[3/4] overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="An ethereal fantasy character illustrated on a trading card" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp5cC9XWa1nFTt11lYIyEMAHFQipaB5v9clPt0KCiOGx-0zd3iBnrb1n3o1u3V7jlpzgphkDKVJpf778Vftbx3rm9ty0Td63b2yGcgEIjtMRqfUzWviWaOIDHFi1Uw1KwXwLu9tcyt0DkiICjO9xydH9x2PV2i-ltIgrUEAcWF-KRzgMRJAVeEfHS4F5NwBoFLrcrr7c5u6Fy-3hr46nmabQWrFxLxrGMtHwvh7FuZbXd9eelUNWZdZD3yE7NjIqkjwduSzA3Ae0BV"/>
+<div class="absolute top-3 left-3 flex gap-2">
+<span class="bg-tertiary/90 text-white font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">JP</span>
+<span class="bg-slate-800 text-slate-300 font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">NEAR MINT</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label text-[10px] text-secondary tracking-widest mb-1 uppercase">Ultra Rare</p>
+<h4 class="font-headline text-lg font-bold text-white leading-tight">Dark Magician Girl</h4>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
+<p class="font-headline text-xl font-black text-on-surface">$3,120.00</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-error uppercase font-label tracking-widest">-2.1%</p>
+<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
+<div class="h-full bg-error w-1/4"></div>
+</div>
+</div>
+</div>
+<a href="onboard_card_detail_standardized_header.html" class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all block text-center">
+                        View Details
+                    </a>
+</div>
+</div>
+<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(255,110,133,0.3)] border border-transparent hover:border-tertiary/20">
+<div class="aspect-[3/4] overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A futuristic robotic warrior featured on a premium trading card" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_DWy6RcfMSFbt6MHVQ5slU8KdScyDp9iS-fIy4dC5Q_iuosRHXvodFSpYlOBugJolz-ZTpbaccprvYcvtar4leaEV0b90xolzXqXtL4lTv4mKB9G-jF_ytAb3Qwzrkga454f_g5xwoWB2DOQk3chz_y_Z66FEjOl4cY6rBZEZ2_TPLE5eG8O9_Yqm-zDislQTR3sswuBBo4R5MKUOafxNqkAwNBZpH-GPYHpV7uvv5kDlS_E3AbJJA8x68_zH6xrOy_HXhsKZNys8"/>
+<div class="absolute top-3 left-3 flex gap-2">
+<span class="bg-primary/90 text-on-primary-fixed font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">EN</span>
+<span class="bg-secondary/90 text-white font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">GEM MINT 10</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label text-[10px] text-tertiary uppercase tracking-widest mb-1">Illustration Rare</p>
+<h4 class="font-headline text-lg font-bold text-white leading-tight">Iron Valiant ex</h4>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
+<p class="font-headline text-xl font-black text-on-surface">$845.00</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-primary uppercase font-label tracking-widest">+5.8%</p>
+<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
+<div class="h-full bg-primary w-1/2"></div>
+</div>
+</div>
+</div>
+<a href="onboard_card_detail_standardized_header.html" class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all block text-center">
+                        View Details
+                    </a>
+</div>
+</div>
+<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(218,201,255,0.3)] border border-transparent hover:border-secondary/20">
+<div class="aspect-[3/4] overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Collection of premium trading cards" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvnIR63Sch3rgakasgYXYdWZw6S_zYAy94BBEGM3IuCcNPIf6eLfI1vTq4jDJhryKnkRiFUihphfdWM2zLJ6djMejIHL5iYquspzYT9S9loXlju9WfYPqUeOODWD8Dh99GdpeFLxcR8bi6qMSkigWi_nyXnCCylwrhnK8tfGtMU_7lrWsDnaaunpFYW6yzGIUDaiq2optVrEc5vt76AV9Fk5iZacYvMK6pwUafbIcsdKbx-E64bt66qWbI4oE_AH4wx4UC2D3LFvXN"/>
+<div class="absolute top-3 left-3 flex gap-2">
+<span class="bg-primary/90 text-on-primary-fixed font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">EN</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label text-[10px] text-secondary-fixed uppercase tracking-widest mb-1">Mythic Rare</p>
+<h4 class="font-headline text-lg font-bold text-white leading-tight">Sheoldred, the Apocalypse</h4>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 bg-surface-container-high">
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
+<p class="font-headline text-xl font-black text-on-surface">$1,150.00</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] text-slate-400 uppercase font-label tracking-widest">0.0%</p>
+<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
+<div class="h-full bg-slate-600 w-1/3"></div>
+</div>
+</div>
+</div>
+<a href="onboard_card_detail_standardized_header.html" class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all block text-center">
+                        View Details
+                    </a>
+</div>
+</div>
+</div>
+<div class="mt-16 flex items-center justify-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-500 hover:text-primary transition-colors border border-outline-variant/10">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold text-xs">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-300 hover:bg-surface-variant transition-colors text-xs font-bold">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-300 hover:bg-surface-variant transition-colors text-xs font-bold">3</button>
+<span class="text-slate-600 px-2">...</span>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-300 hover:bg-surface-variant transition-colors text-xs font-bold">42</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-500 hover:text-primary transition-colors border border-outline-variant/10">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+</div>
 
-### 第三步：注入“灵魂” JavaScript 代码
-滚动到文件的**最底部**，在 `</body>` 标签的**正上方**，将下面这段完整的 `<script>` 代码粘贴进去。
-
-```html
 <script>
     // 1. 获取页面上的元素
     const searchInput = document.getElementById('searchInput');
@@ -309,194 +442,5 @@
         }
     });
 </script>
-<!-- Card 1: Yu-Gi-Oh Starlight -->
-<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(105,218,255,0.3)] border border-transparent hover:border-primary/20">
-<div class="aspect-[3/4] overflow-hidden relative">
-<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Detailed close-up of a rare holographic trading card with iridescent foil reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA22b4Tl-xgRJGktxnufi52_kdgVrENcP2fsRa28874hbJ4wJ-TkzLMmumtLaC9FZbshtYXtDdbPWRE-Tsc4rqBDgR9ifoGa0PIjl-o6VtNzyWDgWMuUwlWYscOL9owAM_snNSKU6Tt1jTr_67qctryAET7EYl8RSQI1ehSQ-W48fDtC6eVTpTVzrpxcmjBP9Y09Z4Ls-u7lzPREjqGwKvJbFuqvR4acV6jh82YEnTKJWzudxuW00ObOkGg9A8ZOo1Q1rCi-QmycnNZ"/>
-<div class="absolute top-3 left-3 flex gap-2">
-<span class="bg-primary/90 text-on-primary-fixed font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">EN</span>
-<span class="bg-secondary/90 text-white font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">MINT 10</span>
-</div>
-<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
-<div class="flex justify-between items-end">
-<div>
-<p class="font-label text-[10px] text-cyan-400 uppercase tracking-widest mb-1">Starlight Rare</p>
-<h4 class="font-headline text-lg font-bold text-white leading-tight">Blue-Eyes White Dragon</h4>
-</div>
-</div>
-</div>
-</div>
-<div class="p-4 bg-surface-container-high">
-<div class="flex justify-between items-center">
-<div>
-<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
-<p class="font-headline text-xl font-black text-on-surface">$14,250.00</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-primary uppercase font-label tracking-widest">+12.4%</p>
-<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
-<div class="h-full bg-primary w-3/4"></div>
-</div>
-</div>
-</div>
-<button class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all">
-                        View Details
-                    </button>
-</div>
-</div>
-<!-- Card 2: Yu-Gi-Oh Ultra Rare -->
-<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(105,218,255,0.3)] border border-transparent hover:border-primary/20">
-<div class="aspect-[3/4] overflow-hidden relative">
-<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="An ethereal fantasy character illustrated on a trading card" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBp5cC9XWa1nFTt11lYIyEMAHFQipaB5v9clPt0KCiOGx-0zd3iBnrb1n3o1u3V7jlpzgphkDKVJpf778Vftbx3rm9ty0Td63b2yGcgEIjtMRqfUzWviWaOIDHFi1Uw1KwXwLu9tcyt0DkiICjO9xydH9x2PV2i-ltIgrUEAcWF-KRzgMRJAVeEfHS4F5NwBoFLrcrr7c5u6Fy-3hr46nmabQWrFxLxrGMtHwvh7FuZbXd9eelUNWZdZD3yE7NjIqkjwduSzA3Ae0BV"/>
-<div class="absolute top-3 left-3 flex gap-2">
-<span class="bg-tertiary/90 text-white font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">JP</span>
-<span class="bg-slate-800 text-slate-300 font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">NEAR MINT</span>
-</div>
-<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
-<div class="flex justify-between items-end">
-<div>
-<p class="font-label text-[10px] text-secondary tracking-widest mb-1 uppercase">Ultra Rare</p>
-<h4 class="font-headline text-lg font-bold text-white leading-tight">Dark Magician Girl</h4>
-</div>
-</div>
-</div>
-</div>
-<div class="p-4 bg-surface-container-high">
-<div class="flex justify-between items-center">
-<div>
-<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
-<p class="font-headline text-xl font-black text-on-surface">$3,120.00</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-error uppercase font-label tracking-widest">-2.1%</p>
-<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
-<div class="h-full bg-error w-1/4"></div>
-</div>
-</div>
-</div>
-<button class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all">
-                        View Details
-                    </button>
-</div>
-</div>
-<!-- Card 3: Pokémon Illustration Rare -->
-<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(255,110,133,0.3)] border border-transparent hover:border-tertiary/20">
-<div class="aspect-[3/4] overflow-hidden relative">
-<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A futuristic robotic warrior featured on a premium trading card" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_DWy6RcfMSFbt6MHVQ5slU8KdScyDp9iS-fIy4dC5Q_iuosRHXvodFSpYlOBugJolz-ZTpbaccprvYcvtar4leaEV0b90xolzXqXtL4lTv4mKB9G-jF_ytAb3Qwzrkga454f_g5xwoWB2DOQk3chz_y_Z66FEjOl4cY6rBZEZ2_TPLE5eG8O9_Yqm-zDislQTR3sswuBBo4R5MKUOafxNqkAwNBZpH-GPYHpV7uvv5kDlS_E3AbJJA8x68_zH6xrOy_HXhsKZNys8"/>
-<div class="absolute top-3 left-3 flex gap-2">
-<span class="bg-primary/90 text-on-primary-fixed font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">EN</span>
-<span class="bg-secondary/90 text-white font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">GEM MINT 10</span>
-</div>
-<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
-<div class="flex justify-between items-end">
-<div>
-<p class="font-label text-[10px] text-tertiary uppercase tracking-widest mb-1">Illustration Rare</p>
-<h4 class="font-headline text-lg font-bold text-white leading-tight">Iron Valiant ex</h4>
-</div>
-</div>
-</div>
-</div>
-<div class="p-4 bg-surface-container-high">
-<div class="flex justify-between items-center">
-<div>
-<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
-<p class="font-headline text-xl font-black text-on-surface">$845.00</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-primary uppercase font-label tracking-widest">+5.8%</p>
-<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
-<div class="h-full bg-primary w-1/2"></div>
-</div>
-</div>
-</div>
-<button class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all">
-                        View Details
-                    </button>
-</div>
-</div>
-<!-- Card 4: MTG Mythic Rare -->
-<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(218,201,255,0.3)] border border-transparent hover:border-secondary/20">
-<div class="aspect-[3/4] overflow-hidden relative">
-<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Collection of premium trading cards" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvnIR63Sch3rgakasgYXYdWZw6S_zYAy94BBEGM3IuCcNPIf6eLfI1vTq4jDJhryKnkRiFUihphfdWM2zLJ6djMejIHL5iYquspzYT9S9loXlju9WfYPqUeOODWD8Dh99GdpeFLxcR8bi6qMSkigWi_nyXnCCylwrhnK8tfGtMU_7lrWsDnaaunpFYW6yzGIUDaiq2optVrEc5vt76AV9Fk5iZacYvMK6pwUafbIcsdKbx-E64bt66qWbI4oE_AH4wx4UC2D3LFvXN"/>
-<div class="absolute top-3 left-3 flex gap-2">
-<span class="bg-primary/90 text-on-primary-fixed font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">EN</span>
-</div>
-<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
-<div class="flex justify-between items-end">
-<div>
-<p class="font-label text-[10px] text-secondary-fixed uppercase tracking-widest mb-1">Mythic Rare</p>
-<h4 class="font-headline text-lg font-bold text-white leading-tight">Sheoldred, the Apocalypse</h4>
-</div>
-</div>
-</div>
-</div>
-<div class="p-4 bg-surface-container-high">
-<div class="flex justify-between items-center">
-<div>
-<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
-<p class="font-headline text-xl font-black text-on-surface">$1,150.00</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-slate-400 uppercase font-label tracking-widest">0.0%</p>
-<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
-<div class="h-full bg-slate-600 w-1/3"></div>
-</div>
-</div>
-</div>
-<button class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all">
-                        View Details
-                    </button>
-</div>
-</div>
-<!-- Card 5: Yu-Gi-Oh QC Secret Rare -->
-<div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(105,218,255,0.3)] border border-transparent hover:border-primary/20">
-<div class="aspect-[3/4] overflow-hidden relative">
-<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Macro photo of a dragon illustration on a card" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7zyReqEF03L3pUmiVqe8lz0FNly_0Fsr6bKf1u16EoiN6f3qkieCeqk4yXSvLYchOKs_Mki22bZvW3YH5dyA65dAcRi52sGlDPMFO4TMJFS1nBk9Nm-6rU0uchgmXlYWaEiANGgZKfRyU_AF9JFYM370iVxpWALaVKSzzcrc_mm6bbraBM_hLtmhj_Ow0ER3r_115mQ0Emo0Brxp3nakg5RD8wwO8qPcH7PeiJ5Ux9LGDazcbbTV3T7oWKcLAY0Q791XndsnaCG2H"/>
-<div class="absolute top-3 left-3 flex gap-2">
-<span class="bg-tertiary/90 text-white font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">JP</span>
-</div>
-<div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-slate-950 to-transparent">
-<div class="flex justify-between items-end">
-<div>
-<p class="font-label text-[10px] text-tertiary tracking-widest mb-1 uppercase">QC Secret Rare</p>
-<h4 class="font-headline text-lg font-bold text-white leading-tight">Red-Eyes Black Dragon</h4>
-</div>
-</div>
-</div>
-</div>
-<div class="p-4 bg-surface-container-high">
-<div class="flex justify-between items-center">
-<div>
-<p class="text-[10px] text-slate-500 uppercase font-label tracking-widest">Market Price</p>
-<p class="font-headline text-xl font-black text-on-surface">$2,450.00</p>
-</div>
-<div class="text-right">
-<p class="text-[10px] text-primary uppercase font-label tracking-widest">+1.2%</p>
-<div class="h-1 w-16 bg-slate-800 rounded-full mt-1 overflow-hidden">
-<div class="h-full bg-primary w-2/3"></div>
-</div>
-</div>
-</div>
-<button class="w-full mt-4 py-2 bg-surface-variant text-slate-300 text-xs font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all">
-                        View Details
-                    </button>
-</div>
-</div>
-</div>
-<!-- Pagination -->
-<div class="mt-16 flex items-center justify-center gap-2">
-<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-500 hover:text-primary transition-colors border border-outline-variant/10">
-<span class="material-symbols-outlined">chevron_left</span>
-</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold text-xs">1</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-300 hover:bg-surface-variant transition-colors text-xs font-bold">2</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-300 hover:bg-surface-variant transition-colors text-xs font-bold">3</button>
-<span class="text-slate-600 px-2">...</span>
-<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-300 hover:bg-surface-variant transition-colors text-xs font-bold">42</button>
-<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-slate-500 hover:text-primary transition-colors border border-outline-variant/10">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</div>
-</main>
-</div>
-</body></html>
+</body>
+</html>
