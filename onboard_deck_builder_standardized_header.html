@@ -84,9 +84,19 @@
                     <h1 class="text-3xl font-black font-headline tracking-tight text-[var(--game-color)]">Current Deck</h1>
                     <p class="text-xs font-label uppercase tracking-widest mt-1 text-[var(--game-color)]" id="systemMessage">System Ready.</p>
                 </div>
-                <div class="flex gap-4">
-                    <button onclick="clearDeck()" class="px-4 py-2 border border-error/50 text-error hover:bg-error/10 rounded-lg text-xs font-bold transition-all">Clear All</button>
-                    <button class="px-6 py-2 bg-[var(--game-color)] text-[#0c0e11] rounded-lg text-xs font-bold hover:brightness-110 transition-all">Save Deck</button>
+                <div class="flex gap-3">
+                    <button onclick="importDeck()" class="px-4 py-2 bg-surface-container hover:bg-surface-variant text-slate-300 rounded-lg text-xs font-bold transition-all border border-outline-variant/20 flex items-center gap-1" title="Import from Code">
+                        <span class="material-symbols-outlined text-[16px]">download</span> Import
+                    </button>
+                    <button onclick="exportDeck()" class="px-4 py-2 bg-surface-container hover:bg-surface-variant text-slate-300 rounded-lg text-xs font-bold transition-all border border-outline-variant/20 flex items-center gap-1" title="Copy Deck Code">
+                        <span class="material-symbols-outlined text-[16px]">share</span> Share
+                    </button>
+                    <button onclick="clearDeck()" class="px-4 py-2 border border-error/50 text-error hover:bg-error/10 rounded-lg text-xs font-bold transition-all flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">delete</span> Clear
+                    </button>
+                    <button onclick="saveDeckLocally()" class="px-6 py-2 bg-[var(--game-color)] text-[#0c0e11] rounded-lg text-xs font-bold hover:brightness-110 shadow-[0_0_15px_var(--game-bg)] transition-all flex items-center gap-1" title="Save to Browser">
+                        <span class="material-symbols-outlined text-[16px]">save</span> Save
+                    </button>
                 </div>
             </div>
 
@@ -295,7 +305,6 @@
         const currentDeck = decks[activeGame];
         
         let isExtra = forceExtra;
-        // 修复忽略大小写的融合/同调/超量自动分流逻辑
         if (activeGame === 'ygo' && !forceExtra) {
             const tLine = card.type.toLowerCase();
             if (tLine.includes('fusion') || tLine.includes('synchro') || tLine.includes('xyz') || tLine.includes('link')) {
@@ -339,7 +348,69 @@
         }
     }
 
-    // --- 6. 完美网格渲染 ---
+    // --- 6. 🌟 保存、导出与导入核心逻辑 🌟 ---
+    
+    // 1. 保存在浏览器缓存中
+    function saveDeckLocally() {
+        localStorage.setItem('onboard_elite_decks', JSON.stringify(decks));
+        showMessage("Deck successfully saved to browser!");
+    }
+
+    // 2. 导出为 Deck Code
+    function exportDeck() {
+        const currentDeck = decks[activeGame];
+        if (currentDeck.main.length === 0 && currentDeck.extra.length === 0) {
+            showMessage("Cannot share an empty deck!", true);
+            return;
+        }
+        
+        // 打包当前游戏环境和卡组数据
+        const exportData = { game: activeGame, deck: currentDeck };
+        
+        // 转成 Base64 编码的 "神秘代码"
+        const deckCode = btoa(encodeURIComponent(JSON.stringify(exportData)));
+        
+        // 尝试自动复制到剪贴板
+        navigator.clipboard.writeText(deckCode).then(() => {
+            alert("✅ Deck Code copied to clipboard! Share it with your friends.");
+            showMessage("Code copied!");
+        }).catch(() => {
+            prompt("Here is your Deck Code. Copy it below:", deckCode);
+        });
+    }
+
+    // 3. 导入 Deck Code
+    function importDeck() {
+        const deckCode = prompt("Paste the Deck Code you received here:");
+        if (!deckCode) return;
+
+        try {
+            // 解析 "神秘代码"
+            const parsedData = JSON.parse(decodeURIComponent(atob(deckCode)));
+            
+            if (!parsedData.game || !parsedData.deck) throw new Error("Format Corrupted");
+            
+            // 如果分享的是另一个游戏的卡组，自动帮用户切换过去！
+            if (activeGame !== parsedData.game) {
+                switchGame(parsedData.game);
+            }
+
+            // 覆盖当前卡组并渲染
+            decks[activeGame] = parsedData.deck;
+            renderDeck();
+            saveDeckLocally(); // 自动保存一下
+            
+            alert("✨ Deck imported successfully!");
+            showMessage("Deck imported!");
+            
+        } catch (error) {
+            console.error(error);
+            alert("❌ Invalid or corrupted Deck Code.");
+            showMessage("Import Failed", true);
+        }
+    }
+
+    // --- 7. 完美网格渲染 ---
     function renderDeckGroup(deckArray, containerElement, isExtra) {
         containerElement.innerHTML = '';
         if (deckArray.length === 0) return;
@@ -367,7 +438,6 @@
             
             items.forEach(item => {
                 const wrapper = document.createElement('div');
-                // 抛弃动态 Padding，使用最稳定、最原生的内联 aspect-ratio 
                 wrapper.className = "w-full rounded shadow-md card-hover border border-transparent hover:border-error/80 transition-all overflow-hidden bg-surface-container-lowest cursor-pointer";
                 wrapper.style = "aspect-ratio: 3/4;";
                 wrapper.title = `${item.card.name} (Click to remove)`;
@@ -398,7 +468,20 @@
         renderDeckGroup(currentDeck.extra, document.getElementById('extraDeckGrid'), true);
     }
 
-    switchGame('ygo'); // Boot up YGO by default
+    // --- 8. 启动应用：尝试读取本地缓存 ---
+    function bootApp() {
+        const savedDecks = localStorage.getItem('onboard_elite_decks');
+        if (savedDecks) {
+            try {
+                decks = JSON.parse(savedDecks);
+            } catch (e) {
+                console.error("Cache decode error");
+            }
+        }
+        switchGame('ygo'); // 默认打开 YGO
+    }
+
+    bootApp(); 
 </script>
 </body>
 </html>
