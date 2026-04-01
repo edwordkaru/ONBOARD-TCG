@@ -36,7 +36,6 @@
     .theme-pkmn { --game-color: #ffcb05; --game-hover: #4a3a00; }
     .theme-mtg { --game-color: #ff7a00; --game-hover: #4a2300; }
 
-    /* 强制抵抗浏览器自动填充 */
     input:-webkit-autofill,
     input:-webkit-autofill:hover, 
     input:-webkit-autofill:focus, 
@@ -46,7 +45,6 @@
         transition: background-color 5000s ease-in-out 0s;
     }
     
-    /* 自定义 select 样式，去掉默认箭头 */
     select {
         -webkit-appearance: none;
         -moz-appearance: none;
@@ -114,19 +112,14 @@
         </div>
 
         <div class="px-6 space-y-6 mb-8">
-            <div id="dynamicCategoryFilters">
-                </div>
-
+            <div id="dynamicCategoryFilters"></div>
             <div>
                 <label class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-2 block">Preferences</label>
-                <select id="preferenceSelect" onchange="applyFilters()" class="w-full bg-[#111417] text-white text-xs font-bold border border-white/10 rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-[var(--game-color)] outline-none cursor-pointer">
-                    </select>
+                <select id="preferenceSelect" onchange="applyFilters()" class="w-full bg-[#111417] text-white text-xs font-bold border border-white/10 rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-[var(--game-color)] outline-none cursor-pointer"></select>
             </div>
-
             <div>
                 <label class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-2 block">Rarity Tier</label>
-                <select id="raritySelect" onchange="applyFilters()" class="w-full bg-[#111417] text-[var(--game-color)] text-xs font-bold border border-white/10 rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-[var(--game-color)] outline-none cursor-pointer">
-                    </select>
+                <select id="raritySelect" onchange="applyFilters()" class="w-full bg-[#111417] text-[var(--game-color)] text-xs font-bold border border-white/10 rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-[var(--game-color)] outline-none cursor-pointer"></select>
             </div>
         </div>
 
@@ -167,14 +160,12 @@
 </div>
 
 <script>
-    // --- 1. 深度配置字典 ---
     const gameConfig = {
         ygo: { name: "Yu-Gi-Oh!", color: "#69daff", source: "TCGPlayer API" },
         pkmn: { name: "Pokémon", color: "#ffcb05", source: "Pokémon TCG API" },
         mtg: { name: "Magic: TG", color: "#ff7a00", source: "Scryfall API" }
     };
 
-    // 动态选项配置
     const filterOptions = {
         ygo: {
             categories: ['All', 'Monsters', 'Spells', 'Traps'],
@@ -193,13 +184,12 @@
         }
     };
 
-    // 状态管理
     let activeMarketGame = 'ygo';
     let activeCategory = 'All'; 
     let searchTimeout = null;
-    let latestFetchedData = []; // 缓存 API 拉取的数据，供本地二次过滤使用
+    let latestFetchedData = [];
 
-    // --- 2. 数据解析映射器 ---
+    // --- 🌟 核心：完整保留卡包数据 ---
     function parseCardData(game, apiCard) {
         let parsed = {
             id: apiCard.id,
@@ -207,23 +197,24 @@
             img: '',
             category: 'Other',
             preference: 'None',
-            rarities: [], // 数组，因为一张卡可能在多个卡包里有不同稀有度
+            rarities: [], 
             displayRarity: 'Common',
-            price: "0.00"
+            price: "0.00",
+            rawSets: [] // 👈 新增：用来存储具体的版本发售信息
         };
 
         if (game === 'ygo') {
             parsed.img = apiCard.card_images[0].image_url;
             parsed.price = apiCard.card_prices[0]?.tcgplayer_price || "0.00";
-            parsed.preference = apiCard.race || 'None'; // Dragon, Spellcaster...
+            parsed.preference = apiCard.race || 'None';
             
             const t = apiCard.type.toLowerCase();
             if (t.includes('spell')) parsed.category = 'Spells';
             else if (t.includes('trap')) parsed.category = 'Traps';
             else parsed.category = 'Monsters';
 
-            // YGO 稀有度在 card_sets 里
             if(apiCard.card_sets) {
+                parsed.rawSets = apiCard.card_sets; // 完整保存发售信息
                 parsed.rarities = apiCard.card_sets.map(s => s.set_rarity);
                 parsed.displayRarity = parsed.rarities[0]; 
             } else {
@@ -255,7 +246,6 @@
             else if (t.includes('enchantment')) parsed.category = 'Enchantments';
             else if (t.includes('instant') || t.includes('sorcery')) parsed.category = 'Instants/Sorceries';
 
-            // 颜色映射 (W=White, U=Blue, B=Black, R=Red, G=Green)
             const colorMap = { 'W': 'White', 'U': 'Blue', 'B': 'Black', 'R': 'Red', 'G': 'Green' };
             parsed.preference = (apiCard.colors && apiCard.colors.length > 0) ? colorMap[apiCard.colors[0]] : 'Colorless';
             
@@ -266,11 +256,8 @@
         return parsed;
     }
 
-    // --- 3. UI 渲染与事件 ---
     function renderFiltersUI() {
         const config = filterOptions[activeMarketGame];
-
-        // 渲染 Category Buttons
         const catContainer = document.getElementById('dynamicCategoryFilters');
         let catHtml = `<h3 class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-3">Card Category</h3><div class="space-y-1">`;
         config.categories.forEach(cat => {
@@ -281,13 +268,8 @@
         catHtml += `</div>`;
         catContainer.innerHTML = catHtml;
 
-        // 渲染 Preference Dropdown
-        const prefSelect = document.getElementById('preferenceSelect');
-        prefSelect.innerHTML = config.preferences.map(p => `<option value="${p}">${p}</option>`).join('');
-
-        // 渲染 Rarity Dropdown
-        const rarSelect = document.getElementById('raritySelect');
-        rarSelect.innerHTML = config.rarities.map(r => `<option value="${r}">${r}</option>`).join('');
+        document.getElementById('preferenceSelect').innerHTML = config.preferences.map(p => `<option value="${p}">${p}</option>`).join('');
+        document.getElementById('raritySelect').innerHTML = config.rarities.map(r => `<option value="${r}">${r}</option>`).join('');
     }
 
     function resetFilters() {
@@ -306,7 +288,6 @@
 
     function setMarketGame(gameId) {
         activeMarketGame = gameId;
-        
         document.getElementById('appBody').className = `bg-background text-on-surface font-body selection:bg-[var(--game-color)] selection:text-background theme-${gameId}`;
         document.getElementById('marketTitle').innerText = `${gameConfig[gameId].name} Market`;
         document.getElementById('dataSourceLabel').innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> ${gameConfig[gameId].source}`;
@@ -322,9 +303,8 @@
             }
         });
 
-        resetFilters(); // 初始化新游戏的过滤器
+        resetFilters(); 
         
-        // 重置搜索状态
         const inputEl = document.getElementById('searchInput');
         inputEl.value = '';
         inputEl.placeholder = `Live search ${gameConfig[gameId].name} cards...`;
@@ -340,7 +320,6 @@
         `;
     }
 
-    // --- 4. 搜索与高级过滤核心引擎 ---
     document.getElementById('searchInput').addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         const query = e.target.value.trim();
@@ -363,7 +342,7 @@
         searchStatus.innerText = `Hooking live market data for "${query}"...`;
 
         try {
-            latestFetchedData = []; // 清空缓存
+            latestFetchedData = []; 
 
             if (activeMarketGame === 'ygo') {
                 const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(query)}`);
@@ -385,7 +364,7 @@
             }
 
             searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm">search</span>`;
-            applyFilters(); // 拉取完立刻执行过滤和渲染
+            applyFilters(); 
 
         } catch (err) {
             searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm text-error">error</span>`;
@@ -394,7 +373,6 @@
         }
     }
 
-    // 本地过滤并渲染
     function applyFilters() {
         const grid = document.getElementById('resultsGrid');
         const searchStatus = document.getElementById('searchStatus');
@@ -402,7 +380,6 @@
         const selPref = document.getElementById('preferenceSelect').value;
         const selRarity = document.getElementById('raritySelect').value;
 
-        // 检查是否有任何过滤条件激活
         const isFiltered = activeCategory !== 'All' || !selPref.includes('All') || !selRarity.includes('All');
         const badge = document.getElementById('activeFiltersBadge');
         if (isFiltered) {
@@ -412,7 +389,6 @@
             badge.style.display = 'none';
         }
 
-        // 如果连数据都没有，直接退出
         if (!latestFetchedData || latestFetchedData.length === 0) {
             const query = document.getElementById('searchInput').value;
             if(query) {
@@ -425,19 +401,14 @@
             return;
         }
 
-        // 🚀 多维过滤引擎开始执行 🚀
         let filteredData = latestFetchedData.filter(card => {
-            // 1. 过滤 Category
             if (activeCategory !== 'All' && card.category !== activeCategory) return false;
             
-            // 2. 过滤 Preference (Race/Type)
             if (!selPref.includes('All')) {
                 if (card.preference !== selPref) return false;
             }
 
-            // 3. 过滤 Rarity
             if (!selRarity.includes('All')) {
-                // YGO 一张卡可能有多个稀有度，所以判断数组里是否包含选中的稀有度
                 const hasRarity = card.rarities.some(r => r && r.toLowerCase() === selRarity.toLowerCase());
                 if (!hasRarity) return false;
             }
@@ -445,7 +416,6 @@
             return true;
         });
 
-        // 取前 16 张展示
         const cardsToDisplay = filteredData.slice(0, 16);
 
         if (cardsToDisplay.length === 0) {
@@ -464,7 +434,17 @@
 
         cardsToDisplay.forEach(card => {
             const detailLink = `onboard_card_detail_standardized_header.html?game=${activeMarketGame}&id=${card.id}`;
-            const displayRarity = selRarity.includes('All') ? card.displayRarity : selRarity; // 智能展示被过滤出来的稀有度
+            let displayRarity = selRarity.includes('All') ? card.displayRarity : selRarity; 
+            let displayPrice = card.price;
+
+            // 🌟 究极黑科技：游戏王专属特定罕贵度价格挖掘！
+            if (activeMarketGame === 'ygo' && !selRarity.includes('All')) {
+                // 潜入 card.rawSets 寻找匹配的稀有度价格
+                const exactSet = card.rawSets.find(s => s.set_rarity.toLowerCase() === selRarity.toLowerCase());
+                if (exactSet && exactSet.set_price && exactSet.set_price !== "0" && exactSet.set_price !== "0.00") {
+                    displayPrice = exactSet.set_price; // 替换为真实的罕贵度价格！
+                }
+            }
 
             const cardHTML = `
                 <div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_var(--game-color)] border border-transparent hover:border-[var(--game-color)]/30">
@@ -484,7 +464,7 @@
                         <div class="flex justify-between items-center mb-4">
                             <div>
                                 <p class="text-[10px] text-slate-400 uppercase font-label tracking-widest">Market Value</p>
-                                <p class="font-headline text-2xl font-black text-white mt-1">$${card.price}</p>
+                                <p class="font-headline text-2xl font-black text-white mt-1">$${displayPrice}</p>
                             </div>
                             <div class="text-right flex flex-col items-end">
                                 <p class="text-[9px] text-[var(--game-color)] uppercase font-label tracking-widest flex items-center gap-1">
@@ -505,9 +485,7 @@
         });
     }
 
-    // 初始化渲染
     renderFiltersUI();
-
 </script>
 </body>
 </html>
