@@ -32,12 +32,11 @@
 </script>
 <style>
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    /* 游戏主题色变量 */
     .theme-ygo { --game-color: #69daff; --game-hover: #004a5d; }
     .theme-pkmn { --game-color: #ffcb05; --game-hover: #4a3a00; }
     .theme-mtg { --game-color: #ff7a00; --game-hover: #4a2300; }
 
-    /* 强制抵抗浏览器自动填充导致的白底白字，锁死深色背景 */
+    /* 强制抵抗浏览器自动填充 */
     input:-webkit-autofill,
     input:-webkit-autofill:hover, 
     input:-webkit-autofill:focus, 
@@ -45,6 +44,17 @@
         -webkit-box-shadow: 0 0 0 30px #111417 inset !important;
         -webkit-text-fill-color: white !important;
         transition: background-color 5000s ease-in-out 0s;
+    }
+    
+    /* 自定义 select 样式，去掉默认箭头 */
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='gray'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
     }
 </style>
 </head>
@@ -87,6 +97,7 @@
 
 <div class="flex pt-20 min-h-screen">
     <aside class="fixed left-0 top-0 h-full w-64 bg-[#080a0d] flex flex-col z-40 shadow-[24px_0_48px_rgba(0,0,0,0.4)] pt-24 overflow-y-auto border-r border-white/5">
+        
         <div class="px-6 mb-6">
             <h3 class="font-headline font-black text-[var(--game-color)] uppercase text-xs tracking-widest mb-4 transition-colors">Market Universe</h3>
             <div class="space-y-2">
@@ -102,8 +113,22 @@
             </div>
         </div>
 
-        <div id="dynamicCategoryFilters" class="px-6 mb-8">
+        <div class="px-6 space-y-6 mb-8">
+            <div id="dynamicCategoryFilters">
+                </div>
+
+            <div>
+                <label class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-2 block">Preferences</label>
+                <select id="preferenceSelect" onchange="applyFilters()" class="w-full bg-[#111417] text-white text-xs font-bold border border-white/10 rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-[var(--game-color)] outline-none cursor-pointer">
+                    </select>
             </div>
+
+            <div>
+                <label class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-2 block">Rarity Tier</label>
+                <select id="raritySelect" onchange="applyFilters()" class="w-full bg-[#111417] text-[var(--game-color)] text-xs font-bold border border-white/10 rounded-lg px-3 py-2.5 focus:ring-1 focus:ring-[var(--game-color)] outline-none cursor-pointer">
+                    </select>
+            </div>
+        </div>
 
         <div class="px-6 mt-auto mb-8">
             <div class="bg-surface-container-low p-4 rounded-lg border border-white/5">
@@ -124,108 +149,163 @@
                 </div>
                 <h1 id="marketTitle" class="font-headline text-5xl font-black text-white tracking-tighter">Yu-Gi-Oh! Market</h1>
             </div>
-            <div id="activeCategoryBadge" class="hidden flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full text-xs font-bold border border-outline-variant/10 text-[var(--game-color)]">
-                <span class="material-symbols-outlined text-sm">filter_alt</span> <span id="activeCategoryText">All Cards</span>
+            <div id="activeFiltersBadge" class="hidden flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full text-xs font-bold border border-outline-variant/10 text-[var(--game-color)]">
+                <span class="material-symbols-outlined text-sm">filter_alt_off</span> 
+                <span id="activeFiltersText">Filtered</span>
+                <button onclick="resetFilters()" class="ml-2 hover:text-white" title="Clear Filters">×</button>
             </div>
         </header>
 
         <div id="resultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
                 <span class="material-symbols-outlined text-6xl mb-4 opacity-50 text-[var(--game-color)]">manage_search</span>
-                <p class="font-headline text-xl">Start typing to fetch live Yu-Gi-Oh! market data.</p>
-                <p class="text-sm mt-2 opacity-60">Fuzzy search & Category filters active!</p>
+                <p class="font-headline text-xl">Start typing to fetch live market data.</p>
+                <p class="text-sm mt-2 opacity-60">Fuzzy search & Multi-dimensional filters active!</p>
             </div>
         </div>
     </main>
 </div>
 
 <script>
-    // --- 1. 全局数据与配置 ---
+    // --- 1. 深度配置字典 ---
     const gameConfig = {
         ygo: { name: "Yu-Gi-Oh!", color: "#69daff", source: "TCGPlayer API" },
         pkmn: { name: "Pokémon", color: "#ffcb05", source: "Pokémon TCG API" },
         mtg: { name: "Magic: TG", color: "#ff7a00", source: "Scryfall API" }
     };
 
-    const gameCategories = {
-        ygo: ['All', 'Monsters', 'Spells', 'Traps'],
-        pkmn: ['All', 'Pokémon', 'Trainers', 'Energies'],
-        mtg: ['All', 'Creatures', 'Instants & Sorceries', 'Lands', 'Artifacts', 'Enchantments', 'Planeswalkers']
+    // 动态选项配置
+    const filterOptions = {
+        ygo: {
+            categories: ['All', 'Monsters', 'Spells', 'Traps'],
+            preferences: ['All Attributes', 'Dragon', 'Spellcaster', 'Warrior', 'Fiend', 'Machine', 'Fairy', 'Zombie'],
+            rarities: ['All Rarities', 'Common', 'Rare', 'Super Rare', 'Ultra Rare', 'Secret Rare', 'Ultimate Rare', 'Starlight Rare', 'Ghost Rare']
+        },
+        pkmn: {
+            categories: ['All', 'Pokémon', 'Trainers', 'Energies'],
+            preferences: ['All Types', 'Colorless', 'Darkness', 'Dragon', 'Fairy', 'Fighting', 'Fire', 'Grass', 'Lightning', 'Metal', 'Psychic', 'Water'],
+            rarities: ['All Rarities', 'Common', 'Uncommon', 'Rare', 'Rare Holo', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Secret Rare']
+        },
+        mtg: {
+            categories: ['All', 'Creatures', 'Instants/Sorceries', 'Lands', 'Artifacts', 'Enchantments', 'Planeswalkers'],
+            preferences: ['All Colors', 'White', 'Blue', 'Black', 'Red', 'Green', 'Colorless'],
+            rarities: ['All Rarities', 'Common', 'Uncommon', 'Rare', 'Mythic']
+        }
     };
 
+    // 状态管理
     let activeMarketGame = 'ygo';
     let activeCategory = 'All'; 
     let searchTimeout = null;
+    let latestFetchedData = []; // 缓存 API 拉取的数据，供本地二次过滤使用
 
-    // --- 2. 智能卡牌识别函数 ---
-    function getCardCategory(game, typeLine) {
-        if (!typeLine) return 'Other';
-        const t = typeLine.toLowerCase();
-        
+    // --- 2. 数据解析映射器 ---
+    function parseCardData(game, apiCard) {
+        let parsed = {
+            id: apiCard.id,
+            name: apiCard.name,
+            img: '',
+            category: 'Other',
+            preference: 'None',
+            rarities: [], // 数组，因为一张卡可能在多个卡包里有不同稀有度
+            displayRarity: 'Common',
+            price: "0.00"
+        };
+
         if (game === 'ygo') {
-            if (t.includes('spell')) return 'Spells';
-            if (t.includes('trap')) return 'Traps';
-            return 'Monsters';
+            parsed.img = apiCard.card_images[0].image_url;
+            parsed.price = apiCard.card_prices[0]?.tcgplayer_price || "0.00";
+            parsed.preference = apiCard.race || 'None'; // Dragon, Spellcaster...
+            
+            const t = apiCard.type.toLowerCase();
+            if (t.includes('spell')) parsed.category = 'Spells';
+            else if (t.includes('trap')) parsed.category = 'Traps';
+            else parsed.category = 'Monsters';
+
+            // YGO 稀有度在 card_sets 里
+            if(apiCard.card_sets) {
+                parsed.rarities = apiCard.card_sets.map(s => s.set_rarity);
+                parsed.displayRarity = parsed.rarities[0]; 
+            } else {
+                parsed.displayRarity = parsed.category;
+            }
         } 
         else if (game === 'pkmn') {
-            if (t.includes('pokémon') || t.includes('pokemon')) return 'Pokémon';
-            if (t.includes('trainer')) return 'Trainers';
-            if (t.includes('energy')) return 'Energies';
-            return 'Other';
+            parsed.img = apiCard.images.large || apiCard.images.small;
+            parsed.price = apiCard.tcgplayer?.prices?.holofoil?.market || apiCard.tcgplayer?.prices?.normal?.market || "0.00";
+            
+            const t = apiCard.supertype.toLowerCase();
+            if (t.includes('pokémon')) parsed.category = 'Pokémon';
+            else if (t.includes('trainer')) parsed.category = 'Trainers';
+            else if (t.includes('energy')) parsed.category = 'Energies';
+
+            parsed.preference = apiCard.types ? apiCard.types[0] : 'Colorless';
+            parsed.rarities = [apiCard.rarity];
+            parsed.displayRarity = apiCard.rarity || parsed.category;
         } 
         else if (game === 'mtg') {
-            if (t.includes('creature')) return 'Creatures';
-            if (t.includes('land')) return 'Lands';
-            if (t.includes('planeswalker')) return 'Planeswalkers';
-            if (t.includes('artifact')) return 'Artifacts';
-            if (t.includes('enchantment')) return 'Enchantments';
-            if (t.includes('instant') || t.includes('sorcery')) return 'Instants & Sorceries';
-            return 'Other';
+            parsed.img = apiCard.image_uris ? apiCard.image_uris.normal : (apiCard.card_faces ? apiCard.card_faces[0].image_uris.normal : '');
+            parsed.price = apiCard.prices.usd || "0.00";
+            
+            const t = apiCard.type_line.toLowerCase();
+            if (t.includes('creature')) parsed.category = 'Creatures';
+            else if (t.includes('land')) parsed.category = 'Lands';
+            else if (t.includes('planeswalker')) parsed.category = 'Planeswalkers';
+            else if (t.includes('artifact')) parsed.category = 'Artifacts';
+            else if (t.includes('enchantment')) parsed.category = 'Enchantments';
+            else if (t.includes('instant') || t.includes('sorcery')) parsed.category = 'Instants/Sorceries';
+
+            // 颜色映射 (W=White, U=Blue, B=Black, R=Red, G=Green)
+            const colorMap = { 'W': 'White', 'U': 'Blue', 'B': 'Black', 'R': 'Red', 'G': 'Green' };
+            parsed.preference = (apiCard.colors && apiCard.colors.length > 0) ? colorMap[apiCard.colors[0]] : 'Colorless';
+            
+            parsed.rarities = [apiCard.rarity];
+            parsed.displayRarity = apiCard.rarity;
         }
-        return 'Cards';
+
+        return parsed;
     }
 
-    // --- 3. 侧边栏动态过滤菜单渲染 ---
-    function renderCategoryFilters() {
-        const container = document.getElementById('dynamicCategoryFilters');
-        const cats = gameCategories[activeMarketGame];
-        
-        let html = `<h3 class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-3">Filter by Category</h3><div class="space-y-1">`;
-        
-        cats.forEach(cat => {
-            const isActive = activeCategory === cat;
-            const bgClass = isActive 
-                ? 'bg-[var(--game-color)]/20 text-[var(--game-color)] border-l-4 border-[var(--game-color)] font-bold' 
-                : 'text-slate-400 hover:bg-white/5 border-l-4 border-transparent hover:border-slate-500 font-medium';
-            
-            html += `<button onclick="setCategory('${cat}')" class="w-full text-left px-4 py-2 text-xs transition-all rounded-r-lg ${bgClass}">${cat}</button>`;
-        });
-        html += `</div>`;
-        container.innerHTML = html;
+    // --- 3. UI 渲染与事件 ---
+    function renderFiltersUI() {
+        const config = filterOptions[activeMarketGame];
 
-        const badge = document.getElementById('activeCategoryBadge');
-        if (activeCategory !== 'All') {
-            badge.style.display = 'flex';
-            document.getElementById('activeCategoryText').innerText = activeCategory;
-        } else {
-            badge.style.display = 'none';
-        }
+        // 渲染 Category Buttons
+        const catContainer = document.getElementById('dynamicCategoryFilters');
+        let catHtml = `<h3 class="font-headline font-black text-slate-500 uppercase text-[10px] tracking-widest mb-3">Card Category</h3><div class="space-y-1">`;
+        config.categories.forEach(cat => {
+            const isActive = activeCategory === cat;
+            const bgClass = isActive ? 'bg-[var(--game-color)]/20 text-[var(--game-color)] border-l-4 border-[var(--game-color)] font-bold' : 'text-slate-400 hover:bg-white/5 border-l-4 border-transparent hover:border-slate-500 font-medium';
+            catHtml += `<button onclick="setCategory('${cat}')" class="w-full text-left px-4 py-2 text-xs transition-all rounded-r-lg ${bgClass}">${cat}</button>`;
+        });
+        catHtml += `</div>`;
+        catContainer.innerHTML = catHtml;
+
+        // 渲染 Preference Dropdown
+        const prefSelect = document.getElementById('preferenceSelect');
+        prefSelect.innerHTML = config.preferences.map(p => `<option value="${p}">${p}</option>`).join('');
+
+        // 渲染 Rarity Dropdown
+        const rarSelect = document.getElementById('raritySelect');
+        rarSelect.innerHTML = config.rarities.map(r => `<option value="${r}">${r}</option>`).join('');
+    }
+
+    function resetFilters() {
+        activeCategory = 'All';
+        document.getElementById('preferenceSelect').selectedIndex = 0;
+        document.getElementById('raritySelect').selectedIndex = 0;
+        renderFiltersUI();
+        applyFilters();
     }
 
     function setCategory(cat) {
         activeCategory = cat;
-        renderCategoryFilters();
-        
-        const query = document.getElementById('searchInput').value.trim();
-        if (query) {
-            triggerSearch(query);
-        }
+        renderFiltersUI();
+        applyFilters();
     }
 
-    // --- 4. 侧边栏游戏切换逻辑 ---
     function setMarketGame(gameId) {
         activeMarketGame = gameId;
-        activeCategory = 'All'; 
         
         document.getElementById('appBody').className = `bg-background text-on-surface font-body selection:bg-[var(--game-color)] selection:text-background theme-${gameId}`;
         document.getElementById('marketTitle').innerText = `${gameConfig[gameId].name} Market`;
@@ -242,23 +322,25 @@
             }
         });
 
-        renderCategoryFilters(); 
-
+        resetFilters(); // 初始化新游戏的过滤器
+        
+        // 重置搜索状态
         const inputEl = document.getElementById('searchInput');
         inputEl.value = '';
         inputEl.placeholder = `Live search ${gameConfig[gameId].name} cards...`;
         document.getElementById('searchStatus').innerText = "Global Index Ranking";
+        latestFetchedData = [];
         
         document.getElementById('resultsGrid').innerHTML = `
             <div class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
                 <span class="material-symbols-outlined text-6xl mb-4 opacity-50 text-[var(--game-color)]">manage_search</span>
                 <p class="font-headline text-xl">Start typing to fetch live ${gameConfig[gameId].name} market data.</p>
-                <p class="text-sm mt-2 opacity-60">Fuzzy search & Category filters active!</p>
+                <p class="text-sm mt-2 opacity-60">Fuzzy search & Multi-dimensional filters active!</p>
             </div>
         `;
     }
 
-    // --- 5. 模糊搜索绑定 ---
+    // --- 4. 搜索与高级过滤核心引擎 ---
     document.getElementById('searchInput').addEventListener('input', (e) => {
         clearTimeout(searchTimeout);
         const query = e.target.value.trim();
@@ -270,14 +352,10 @@
         }
 
         searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm animate-spin text-[var(--game-color)]">refresh</span>`;
-        
-        searchTimeout = setTimeout(() => {
-            triggerSearch(query);
-        }, 500); 
+        searchTimeout = setTimeout(() => { fetchFromAPI(query); }, 600); 
     });
 
-    // --- 6. API 拉取与智能过滤 ---
-    async function triggerSearch(query) {
+    async function fetchFromAPI(query) {
         const grid = document.getElementById('resultsGrid');
         const searchStatus = document.getElementById('searchStatus');
         const searchIcon = document.getElementById('searchIcon');
@@ -285,118 +363,29 @@
         searchStatus.innerText = `Hooking live market data for "${query}"...`;
 
         try {
-            let allFetchedCards = [];
+            latestFetchedData = []; // 清空缓存
 
             if (activeMarketGame === 'ygo') {
                 const res = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?fname=${encodeURIComponent(query)}`);
                 const data = await res.json();
-                if(!data.error) {
-                    allFetchedCards = data.data.slice(0, 60).map(c => ({
-                        id: c.id, 
-                        name: c.name, 
-                        img: c.card_images[0].image_url, 
-                        rarity: c.type.includes("Monster") ? "Monster Card" : "Spell/Trap",
-                        rawType: c.type, 
-                        price: c.card_prices[0]?.tcgplayer_price || "0.00"
-                    }));
-                }
+                if(!data.error) latestFetchedData = data.data.slice(0, 100).map(c => parseCardData('ygo', c));
             } 
             else if (activeMarketGame === 'pkmn') {
                 const fuzzyQueries = query.split(' ').filter(w => w.length > 0).map(w => `name:*${w}*`).join(' ');
                 const res = await fetch(`https://api.pokemontcg.io/v2/cards?q=${encodeURIComponent(fuzzyQueries)}`);
                 const data = await res.json();
-                if(data.data && data.data.length > 0) {
-                    allFetchedCards = data.data.slice(0, 60).map(c => ({
-                        id: c.id, 
-                        name: c.name, 
-                        img: c.images.large || c.images.small, 
-                        rarity: c.rarity || c.supertype,
-                        rawType: c.supertype, 
-                        price: c.tcgplayer?.prices?.holofoil?.market || c.tcgplayer?.prices?.normal?.market || "0.00"
-                    }));
-                }
+                if(data.data && data.data.length > 0) latestFetchedData = data.data.slice(0, 100).map(c => parseCardData('pkmn', c));
             }
             else if (activeMarketGame === 'mtg') {
                 const res = await fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 if(data.data && data.data.length > 0) {
-                    allFetchedCards = data.data.slice(0, 60).map(c => ({
-                        id: c.id, 
-                        name: c.name, 
-                        img: c.image_uris ? c.image_uris.normal : (c.card_faces ? c.card_faces[0].image_uris.normal : ''), 
-                        rarity: c.rarity,
-                        rawType: c.type_line, 
-                        price: c.prices.usd || "0.00"
-                    })).filter(c => c.img !== ''); 
+                    latestFetchedData = data.data.slice(0, 100).map(c => parseCardData('mtg', c)).filter(c => c.img !== ''); 
                 }
             }
 
-            if (activeCategory !== 'All') {
-                allFetchedCards = allFetchedCards.filter(card => getCardCategory(activeMarketGame, card.rawType) === activeCategory);
-            }
-
-            const cardsToDisplay = allFetchedCards.slice(0, 16);
-
             searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm">search</span>`;
-
-            if (cardsToDisplay.length === 0) {
-                let errorMsg = `No assets found for "${query}"`;
-                if (activeCategory !== 'All') errorMsg += ` in category [${activeCategory}]`;
-                
-                searchStatus.innerText = "0 results found.";
-                grid.innerHTML = `
-                    <div class="col-span-full py-20 flex flex-col items-center justify-center text-error">
-                        <span class="material-symbols-outlined text-6xl mb-4 opacity-80">sentiment_dissatisfied</span>
-                        <p class="font-headline text-xl">${errorMsg}</p>
-                        <p class="text-sm mt-2 opacity-60 text-slate-400">Try changing the category filter or check spelling.</p>
-                    </div>`;
-                return;
-            }
-
-            searchStatus.innerText = `Displaying top ${cardsToDisplay.length} market results`;
-            grid.innerHTML = '';
-
-            cardsToDisplay.forEach(card => {
-                // 🌟 核心修改点：替换为带有参数的动态详情页链接 🌟
-                const detailLink = `onboard_card_detail_standardized_header.html?game=${activeMarketGame}&id=${card.id}`;
-
-                const cardHTML = `
-                    <div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_var(--game-color)] border border-transparent hover:border-[var(--game-color)]/30">
-                        <div class="aspect-[3/4] overflow-hidden relative bg-black">
-                            <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="${card.img}" alt="${card.name}"/>
-                            <div class="absolute top-3 left-3 flex gap-2">
-                                <span class="bg-black/80 backdrop-blur-md text-white border border-[var(--game-color)]/50 font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter shadow-lg">EN</span>
-                            </div>
-                            <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent">
-                                <div>
-                                    <p class="font-label text-[10px] text-[var(--game-color)] uppercase tracking-widest mb-1 drop-shadow-md">${card.rarity}</p>
-                                    <h4 class="font-headline text-lg font-bold text-white leading-tight truncate w-full drop-shadow-lg">${card.name}</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-5 bg-surface-container-highest relative">
-                            <div class="flex justify-between items-center mb-4">
-                                <div>
-                                    <p class="text-[10px] text-slate-400 uppercase font-label tracking-widest">Market Value</p>
-                                    <p class="font-headline text-2xl font-black text-white mt-1">$${card.price}</p>
-                                </div>
-                                <div class="text-right flex flex-col items-end">
-                                    <p class="text-[9px] text-[var(--game-color)] uppercase font-label tracking-widest flex items-center gap-1">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-[var(--game-color)] animate-ping"></span> LIVE
-                                    </p>
-                                    <div class="h-1 w-12 bg-black rounded-full mt-2 overflow-hidden shadow-inner">
-                                        <div class="h-full bg-[var(--game-color)] w-full"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <a href="${detailLink}" class="w-full py-2.5 bg-background border border-white/5 text-slate-300 text-xs font-bold rounded-lg hover:bg-[var(--game-color)] hover:text-background hover:border-transparent transition-all block text-center shadow-md">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-                `;
-                grid.insertAdjacentHTML('beforeend', cardHTML);
-            });
+            applyFilters(); // 拉取完立刻执行过滤和渲染
 
         } catch (err) {
             searchIcon.innerHTML = `<span class="material-symbols-outlined text-sm text-error">error</span>`;
@@ -405,7 +394,119 @@
         }
     }
 
-    renderCategoryFilters();
+    // 本地过滤并渲染
+    function applyFilters() {
+        const grid = document.getElementById('resultsGrid');
+        const searchStatus = document.getElementById('searchStatus');
+        
+        const selPref = document.getElementById('preferenceSelect').value;
+        const selRarity = document.getElementById('raritySelect').value;
+
+        // 检查是否有任何过滤条件激活
+        const isFiltered = activeCategory !== 'All' || !selPref.includes('All') || !selRarity.includes('All');
+        const badge = document.getElementById('activeFiltersBadge');
+        if (isFiltered) {
+            badge.style.display = 'flex';
+            document.getElementById('activeFiltersText').innerText = 'Filters Active';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        // 如果连数据都没有，直接退出
+        if (!latestFetchedData || latestFetchedData.length === 0) {
+            const query = document.getElementById('searchInput').value;
+            if(query) {
+                grid.innerHTML = `
+                <div class="col-span-full py-20 flex flex-col items-center justify-center text-error">
+                    <span class="material-symbols-outlined text-6xl mb-4 opacity-80">sentiment_dissatisfied</span>
+                    <p class="font-headline text-xl">No assets found</p>
+                </div>`;
+            }
+            return;
+        }
+
+        // 🚀 多维过滤引擎开始执行 🚀
+        let filteredData = latestFetchedData.filter(card => {
+            // 1. 过滤 Category
+            if (activeCategory !== 'All' && card.category !== activeCategory) return false;
+            
+            // 2. 过滤 Preference (Race/Type)
+            if (!selPref.includes('All')) {
+                if (card.preference !== selPref) return false;
+            }
+
+            // 3. 过滤 Rarity
+            if (!selRarity.includes('All')) {
+                // YGO 一张卡可能有多个稀有度，所以判断数组里是否包含选中的稀有度
+                const hasRarity = card.rarities.some(r => r && r.toLowerCase() === selRarity.toLowerCase());
+                if (!hasRarity) return false;
+            }
+
+            return true;
+        });
+
+        // 取前 16 张展示
+        const cardsToDisplay = filteredData.slice(0, 16);
+
+        if (cardsToDisplay.length === 0) {
+            searchStatus.innerText = "0 results found.";
+            grid.innerHTML = `
+                <div class="col-span-full py-20 flex flex-col items-center justify-center text-error">
+                    <span class="material-symbols-outlined text-6xl mb-4 opacity-80">filter_list_off</span>
+                    <p class="font-headline text-xl">No cards match your exact filters</p>
+                    <p class="text-sm mt-2 opacity-60 text-slate-400">Try broadening your search criteria.</p>
+                </div>`;
+            return;
+        }
+
+        searchStatus.innerText = `Displaying ${cardsToDisplay.length} filtered results`;
+        grid.innerHTML = '';
+
+        cardsToDisplay.forEach(card => {
+            const detailLink = `onboard_card_detail_standardized_header.html?game=${activeMarketGame}&id=${card.id}`;
+            const displayRarity = selRarity.includes('All') ? card.displayRarity : selRarity; // 智能展示被过滤出来的稀有度
+
+            const cardHTML = `
+                <div class="group relative bg-surface-container-high rounded-xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_var(--game-color)] border border-transparent hover:border-[var(--game-color)]/30">
+                    <div class="aspect-[3/4] overflow-hidden relative bg-black">
+                        <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="${card.img}" alt="${card.name}"/>
+                        <div class="absolute top-3 left-3 flex gap-2">
+                            <span class="bg-black/80 backdrop-blur-md text-white border border-[var(--game-color)]/50 font-label text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter shadow-lg">${card.preference}</span>
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent">
+                            <div>
+                                <p class="font-label text-[10px] text-[var(--game-color)] uppercase tracking-widest mb-1 drop-shadow-md truncate">${displayRarity}</p>
+                                <h4 class="font-headline text-lg font-bold text-white leading-tight truncate w-full drop-shadow-lg">${card.name}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-5 bg-surface-container-highest relative">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <p class="text-[10px] text-slate-400 uppercase font-label tracking-widest">Market Value</p>
+                                <p class="font-headline text-2xl font-black text-white mt-1">$${card.price}</p>
+                            </div>
+                            <div class="text-right flex flex-col items-end">
+                                <p class="text-[9px] text-[var(--game-color)] uppercase font-label tracking-widest flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[var(--game-color)] animate-ping"></span> LIVE
+                                </p>
+                                <div class="h-1 w-12 bg-black rounded-full mt-2 overflow-hidden shadow-inner">
+                                    <div class="h-full bg-[var(--game-color)] w-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="${detailLink}" class="w-full py-2.5 bg-background border border-white/5 text-slate-300 text-xs font-bold rounded-lg hover:bg-[var(--game-color)] hover:text-background hover:border-transparent transition-all block text-center shadow-md">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            `;
+            grid.insertAdjacentHTML('beforeend', cardHTML);
+        });
+    }
+
+    // 初始化渲染
+    renderFiltersUI();
 
 </script>
 </body>
