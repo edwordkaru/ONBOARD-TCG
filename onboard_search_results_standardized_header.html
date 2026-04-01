@@ -189,7 +189,6 @@
     let searchTimeout = null;
     let latestFetchedData = [];
 
-    // --- 🌟 核心：完整保留卡包数据 ---
     function parseCardData(game, apiCard) {
         let parsed = {
             id: apiCard.id,
@@ -200,7 +199,7 @@
             rarities: [], 
             displayRarity: 'Common',
             price: "0.00",
-            rawSets: [] // 👈 新增：用来存储具体的版本发售信息
+            rawSets: [] 
         };
 
         if (game === 'ygo') {
@@ -214,7 +213,7 @@
             else parsed.category = 'Monsters';
 
             if(apiCard.card_sets) {
-                parsed.rawSets = apiCard.card_sets; // 完整保存发售信息
+                parsed.rawSets = apiCard.card_sets; 
                 parsed.rarities = apiCard.card_sets.map(s => s.set_rarity);
                 parsed.displayRarity = parsed.rarities[0]; 
             } else {
@@ -403,16 +402,11 @@
 
         let filteredData = latestFetchedData.filter(card => {
             if (activeCategory !== 'All' && card.category !== activeCategory) return false;
-            
-            if (!selPref.includes('All')) {
-                if (card.preference !== selPref) return false;
-            }
-
+            if (!selPref.includes('All') && card.preference !== selPref) return false;
             if (!selRarity.includes('All')) {
                 const hasRarity = card.rarities.some(r => r && r.toLowerCase() === selRarity.toLowerCase());
                 if (!hasRarity) return false;
             }
-
             return true;
         });
 
@@ -436,13 +430,29 @@
             const detailLink = `onboard_card_detail_standardized_header.html?game=${activeMarketGame}&id=${card.id}`;
             let displayRarity = selRarity.includes('All') ? card.displayRarity : selRarity; 
             let displayPrice = card.price;
+            let priceLabel = "Base Value"; // 清楚标明当前显示的是底价还是特定版本价格
 
-            // 🌟 究极黑科技：游戏王专属特定罕贵度价格挖掘！
+            // 🌟 究极黑科技：游戏王专属特定罕贵度价格挖掘引擎！
             if (activeMarketGame === 'ygo' && !selRarity.includes('All')) {
-                // 潜入 card.rawSets 寻找匹配的稀有度价格
-                const exactSet = card.rawSets.find(s => s.set_rarity.toLowerCase() === selRarity.toLowerCase());
-                if (exactSet && exactSet.set_price && exactSet.set_price !== "0" && exactSet.set_price !== "0.00") {
-                    displayPrice = exactSet.set_price; // 替换为真实的罕贵度价格！
+                // 找出所有符合要求的罕贵度版本
+                const matchingSets = card.rawSets.filter(s => s.set_rarity.toLowerCase() === selRarity.toLowerCase());
+                
+                if (matchingSets.length > 0) {
+                    let maxPrice = 0;
+                    // 对比出所有版本中最高/最有效的价格
+                    matchingSets.forEach(s => {
+                        const p = parseFloat(s.set_price || "0");
+                        if (p > maxPrice) maxPrice = p;
+                    });
+                    
+                    if (maxPrice > 0) {
+                        displayPrice = maxPrice.toFixed(2);
+                        priceLabel = "Specific Rarity";
+                    } else {
+                        // 核心防坑！如果 API 彻底没数据，显示 N/A，绝不用 0.16 忽悠人！
+                        displayPrice = "N/A";
+                        priceLabel = "Data Missing";
+                    }
                 }
             }
 
@@ -463,8 +473,8 @@
                     <div class="p-5 bg-surface-container-highest relative">
                         <div class="flex justify-between items-center mb-4">
                             <div>
-                                <p class="text-[10px] text-slate-400 uppercase font-label tracking-widest">Market Value</p>
-                                <p class="font-headline text-2xl font-black text-white mt-1">$${displayPrice}</p>
+                                <p class="text-[10px] text-slate-400 uppercase font-label tracking-widest">${priceLabel}</p>
+                                <p class="font-headline text-2xl font-black ${displayPrice === 'N/A' ? 'text-slate-500' : 'text-white'} mt-1">${displayPrice === 'N/A' ? 'N/A' : '$' + displayPrice}</p>
                             </div>
                             <div class="text-right flex flex-col items-end">
                                 <p class="text-[9px] text-[var(--game-color)] uppercase font-label tracking-widest flex items-center gap-1">
